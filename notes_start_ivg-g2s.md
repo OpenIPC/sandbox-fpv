@@ -14,12 +14,12 @@
     
     
 Термины:
-  Flash - в данном контексте SPI-flash, микросхема памяти.
-  U-Boot - загрузчик. Есть "родной", есть от OpenIPC. Родной запаролен.
-  uImage - ядро Embedded Linux, в виде bin файла.
-  Root-FS - файловая система выбранной версии (lite, ultimate, fpv), в виде squash-fs файла [https://ru.wikipedia.org/wiki/Squashfs]. uImage и rootfs нужно добывать через конструктор инструкций, раздельная прошивка u-boot и root-fs.
-  Shell - командная строка linux камеры, доступна через uart и ssh (программа putty). Также есть shell загрузчика, только uart. Логин root, пароля нет.
-  Majestic - утилита - стример потоков видео, из комплекта прошивки OpenIPC.
+* Flash - в данном контексте SPI-flash, микросхема памяти.
+* U-Boot - загрузчик. Есть "родной", есть от OpenIPC. Родной запаролен.
+* uImage - ядро Embedded Linux, в виде bin файла.
+* Root-FS - файловая система выбранной версии (lite, ultimate, fpv), в виде squash-fs файла [https://ru.wikipedia.org/wiki/Squashfs]. uImage и rootfs нужно добывать через конструктор инструкций, раздельная прошивка u-boot и root-fs.
+* Shell - командная строка linux камеры, доступна через uart и ssh (программа putty). Также есть shell загрузчика, только uart. Логин root, пароля нет.
+* Majestic - утилита - стример потоков видео, из комплекта прошивки OpenIPC.
 
 Платы оснащаются обычно spi-flash размером 8 или 16 мб. Версия ultimate требует 16, можно перепаять. Для fpv целей достаточно 8мб.
 
@@ -44,12 +44,15 @@
 Самый сложный способ, это единственный минус.
 
 При первой загрузке необходимо выполнить команду firstboot.
-Если камера циклично перезагружается - это срабатывает watchdog от majestic (стримера). Скорее всего нужно снять колпачок объектива и включить свет. Отключается в /etc/majestic.yaml, убить процесс быстро: killall majestic.
+Если камера циклично перезагружается - это срабатывает watchdog от majestic (стримера). Скорее всего нужно снять колпачок объектива и включить свет. Отключается в /etc/majestic.yaml, убить процесс быстро: `killall majestic`.
+
 Управлять параметрами конфига с сохранением можно через утилиту cli шелла:
-    cli -s .image.contrast 50
-    cli -s .image.luminance 50
-    cli -s .video0.codec h264
-    cli -s .hls.enabled false
+```
+cli -s .image.contrast 50
+cli -s .image.luminance 50
+cli -s .video0.codec h264
+cli -s .hls.enabled false
+```
 Рекомендую выполнить эти команды, это настроит majestic и он перестанет падать с закрытым колпачком.
 
 Перейти на версию FPV с обновлением. Внимание! В версии FPV отключен shell через uart (освобожден для работы телеметрии), после загрузки, остается только сетевой доступ. Сам загрузчик, конечно, работает через uart.
@@ -63,16 +66,22 @@
 Если flash заблокирована (вы как то прошили ядро предыдущих версий, которые не умеют разблокировать флеш), то эта и любые прочие команды выполнены не будут.
 
 Пример вывода dmesg | grep bsp-sfc для определения блокировки флешки
-  Разблокирована
-    bsp-sfc bsp_spi_nor.0: SR1:[02]->[00]
-    bsp-sfc bsp_spi_nor.0: SR2:[02]->[00]
-    bsp-sfc bsp_spi_nor.0: all blocks are unlocked.
-    bsp-sfc bsp_spi_nor.0: Winbond: SR1 [], SR2 [QE], SR3 [DRV0,DRV1]
-  Заблокирована
-    bsp-sfc bsp_spi_nor.0: SR1:[02]->[00]
-    bsp-sfc bsp_spi_nor.0: SR2:[02]->[00]
-    bsp-sfc bsp_spi_nor.0: all blocks are unlocked.
-    bsp-sfc bsp_spi_nor.0: Winbond: SR1 [TB], SR2 [QE], SR3 [WPS,DRV0,DRV1]
+
+Разблокирована
+```
+bsp-sfc bsp_spi_nor.0: SR1:[02]->[00]
+bsp-sfc bsp_spi_nor.0: SR2:[02]->[00]
+bsp-sfc bsp_spi_nor.0: all blocks are unlocked.
+bsp-sfc bsp_spi_nor.0: Winbond: SR1 [], SR2 [QE], SR3 [DRV0,DRV1]
+```
+
+Заблокирована
+```
+bsp-sfc bsp_spi_nor.0: SR1:[02]->[00]
+bsp-sfc bsp_spi_nor.0: SR2:[02]->[00]
+bsp-sfc bsp_spi_nor.0: all blocks are unlocked.
+bsp-sfc bsp_spi_nor.0: Winbond: SR1 [TB], SR2 [QE], SR3 [WPS,DRV0,DRV1]
+```
 
 Попытка разблокировать флеш из shell (мне не помогла)
     devmem 0x10010024 32 0x06;devmem 0x10010030 32 0;devmem 0x1001003C 32 0x81;devmem 0x14000000 16 0x0000;devmem 0x10010024 32 0x01;devmem 0x10010030 32 0;devmem 0x10010038 32 2;devmem 0x1001003C 32 0xA1
