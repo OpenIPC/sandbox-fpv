@@ -83,18 +83,27 @@ bsp-sfc bsp_spi_nor.0: Winbond: SR1 [TB], SR2 [QE], SR3 [WPS,DRV0,DRV1]
 ```
 
 Попытка разблокировать флеш из shell (мне не помогла)
-    devmem 0x10010024 32 0x06;devmem 0x10010030 32 0;devmem 0x1001003C 32 0x81;devmem 0x14000000 16 0x0000;devmem 0x10010024 32 0x01;devmem 0x10010030 32 0;devmem 0x10010038 32 2;devmem 0x1001003C 32 0xA1
-    sysupgrade --force_ver -k -r -n
+```
+devmem 0x10010024 32 0x06;devmem 0x10010030 32 0;devmem 0x1001003C 32 0x81;devmem 0x14000000 16 0x0000;devmem 0x10010024 32 0x01;devmem 0x10010030 32 0;devmem 0x10010038 32 2;devmem 0x1001003C 32 0xA1
+#
+sysupgrade --force_ver -k -r -n
+```
 
 Путь к разблокировке flash лежит через загрузку свежего ядра, распакованного архиватором из tgz файла с ядром и rootfs, взятого из конструктора инструкций. Загрузившись, оно автоматически разблокирует flash. Делается из загрузчика, залитого в ram через burn.
-    #устанавливаем адрес камеры и адрес сервера tftpd
-    setenv ipaddr 192.168.0.222; setenv serverip 192.168.0.107
-    #устанавливаем аргументы окружения (env)
-    setenv bootargs 'mem=32M console=ttyAMA0,115200 panic=20 rootfstype=squashfs root=/dev/mtdblock3 init=/init mtdparts=sfc:256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)'
-    #Очищаем область оперативной памяти для скачивания ядра
-    mw.b 0x42000000 ff 1000000
-    #Загружаем ядро uImage.gk7205v200 с tftpd сервера
-    tftpboot 0x42000000 uImage.${soc}
-    #запускаем ядро
-    bootm 0x42000000
 
+```
+# Устанавливаем адрес камеры и адрес сервера tftpd
+setenv ipaddr 192.168.0.222; setenv serverip 192.168.0.107
+
+# Устанавливаем аргументы окружения (env)
+setenv bootargs 'mem=32M console=ttyAMA0,115200 panic=20 rootfstype=squashfs root=/dev/mtdblock3 init=/init mtdparts=sfc:256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)'
+
+# Очищаем область оперативной памяти для скачивания ядра
+mw.b 0x42000000 ff 1000000
+
+# Загружаем ядро uImage.gk7205v200 с tftpd сервера
+tftpboot 0x42000000 uImage.${soc}
+
+# Запускаем ядро
+bootm 0x42000000
+```
