@@ -1,2 +1,4 @@
 # sandbox-fpv
 Sandbox for FPV experiments
+
+[Заметка о прошивке камеры gk7205v200 на OpenIPC](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_start_ivg-g2s.md)
