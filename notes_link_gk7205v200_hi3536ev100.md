@@ -52,5 +52,6 @@ Alexey Bezborodov из команды OpenIPC предоставил на тес
 . /etc/telemetry.conf
 /usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx}
 ```
-Если запуск произойдет без ошибок, измените `/usr/bin/telemetry` как указано выше и перезапустите регистратор.
+Если запуск произойдет без ошибок, измените `/usr/bin/telemetry` как указано выше и перезапустите регистратор. Также можно отключить запуск сервиса телеметрии в `/etc/wfb.conf`, установив `telemetry=false` и запускать для проверки его вручную: `/usr/bin/telemetry start`.
 
+##### продолжение следует
