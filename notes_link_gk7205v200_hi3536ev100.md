@@ -44,7 +44,7 @@ Alexey Bezborodov из команды OpenIPC предоставил на тес
      echo "error!"
   else
      echo "test ok"
-     #while true; do /usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx}; done &
+     while true; do /usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx}; done &
   fi
 ```
 Тогда телеметрия станет доступна на uart регистратора взамен udp по сети, и ее можно будет использовать через usb-uart адаптер как serial port. Такой финт с `while..do` потребовался по причине периодического вылета `mavfwd` на наземке с сообщением `Serial port closed`, и цикл бесконечно его перезапускает, что обеспечивает нормальную работу. Однако, будьте осторожны! Если вы укажете какой то параметр в `telemetry.conf` неверно, то он будет перезапускаться бесконечно и мгновенно, отбирая все ресурсы системы и не позволяя исправить ситуацию через ssh. Лучше перед внесением изменений проверьте запуск `mavfwd`:
