@@ -37,9 +37,15 @@ Alexey Bezborodov из команды OpenIPC предоставил на тес
 
 ![telemetry](https://github.com/OpenIPC/sandbox-fpv/raw/master/notes_files/telemetry.png)
 
-С применением mavlink-routerd на текущий момент возможна только односторонняя телеметрия, поскольку он не умеет использовать разные rx/tx udp порты в рамках одного endpoint, как того требует wfb-ng, будучи запущенным разными процессами `telemetry_rx` и `telemetry_tx`. Кстати, это просто символьные ссылки на wfb_rx и wfb_tx, создаваемые скриптом [запуска телеметрии](https://github.com/OpenIPC/sandbox-fpv/blob/master/hi3536dv100/usr/bin/telemetry). На текущий момент, для применения двусторонней телеметрии можно вернуть `mavfwd` взамен `mavlink-routerd` в скрипте запуска телеметрии `/usr/bin/telemetry`:
+С применением mavlink-routerd на текущий момент возможна только односторонняя телеметрия по udp, поскольку он не умеет использовать разные rx/tx udp порты в рамках одного endpoint, как того требует wfb-ng, будучи запущенным разными процессами `telemetry_rx` и `telemetry_tx`. Кстати, это просто символьные ссылки на wfb_rx и wfb_tx, создаваемые скриптом [запуска телеметрии](https://github.com/OpenIPC/sandbox-fpv/blob/master/hi3536dv100/usr/bin/telemetry). На текущий момент, для применения двусторонней телеметрии можно вернуть `mavfwd` взамен `mavlink-routerd` в скрипте запуска телеметрии `/usr/bin/telemetry`:
 ```
 #/usr/bin/mavlink-routerd -c /etc/mavlink.conf &
-mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} &
+while true; do /usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx}; done &
 ```
-Тогда телеметрия станет доступна на uart регистратора взамен udp по сети, и ее можно будет использовать через usb-uart адаптер как serial port.
+Тогда телеметрия станет доступна на uart регистратора взамен udp по сети, и ее можно будет использовать через usb-uart адаптер как serial port. Такой финт с `while..do` потребовался по причине периодического вылета `mavfwd` на наземке с сообщением `Serial port closed`, и цикл бесконечно его перезапускает, что обеспечивает нормальную работу. Однако, будьте осторожны! Если вы укажете какой то параметр в `telemetry.conf` неверно, или например закомментируете любую переменную для `mavfwd` то он будет перезапускаться бесконечно и мгновенно, отбирая все ресурсы системы и не позволяя исправить ситуацию через ssh. Лучше перед внесением изменений проверьте запуск `mavfwd`:
+```
+. /etc/telemetry.conf
+/usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx}
+```
+Если запуск произойдет без ошибок, измените `/usr/bin/telemetry` как указано выше и перезапустите регистратор.
+
