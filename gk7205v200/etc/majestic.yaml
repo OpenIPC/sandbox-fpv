@@ -58,10 +58,6 @@ isp:
   slowShutter: disabled
   drc: 350
   lowDelay: true
-  blkCnt: 4
-  antiFlicker: disabled
-  memMode: normal
-  rawMode: fast
   sensorConfig: /etc/sensors/imx307_i2c_2l_1080p.ini
 netip:
   enabled: false
