@@ -42,3 +42,4 @@ Alexey Bezborodov из команды OpenIPC предоставил на тес
 #/usr/bin/mavlink-routerd -c /etc/mavlink.conf &
 mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} &
 ```
+Тогда телеметрия станет доступна на uart регистратора взамен udp по сети, и ее можно будет использовать через usb-uart адаптер как serial port.
