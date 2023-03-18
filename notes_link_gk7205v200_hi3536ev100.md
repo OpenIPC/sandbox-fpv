@@ -44,7 +44,7 @@ Andrey Bezborodov из команды OpenIPC предоставил на тес
   #/usr/bin/mavlink-routerd -c /etc/mavlink.conf &
   /usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} &
 ```
-Необходимо отключить ssh консоль от uart в /etc/inittab, закоменнтировав строчку:
+Необходимо отключить ssh консоль от uart в /etc/inittab, закомментировав строчку:
 ```
 #console::respawn:/sbin/getty -L  console 0 vt100 # GENERIC_SERIAL
 ```
