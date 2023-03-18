@@ -4,15 +4,17 @@
 
 ```
 cat /proc/cmdline
-mem=150M console=ttyAMA0,115200 panic=20 root=/dev/mtdblock3 rootfstype=squashfs init=/init *mtdparts=hi_sfc:256k(boot),64k(env),2048k(kernel),8192k(rootfs),-(rootfs_data)*
+mem=150M console=ttyAMA0,115200 panic=20 root=/dev/mtdblock3 rootfstype=squashfs init=/init mtdparts=hi_sfc:256k(boot),64k(env),2048k(kernel),8192k(rootfs),-(rootfs_data)
 ls /dev/mtdb*
 /dev/mtdblock0  /dev/mtdblock1  /dev/mtdblock2  /dev/mtdblock3  /dev/mtdblock4
 ```
 Как следует из вывода, нулевой блок это загрузчик u-boot; далее идет блок для хранения переменных окружения (`printenv`, `setenv` команды пишут в ОЗУ, а `saveenv` сохраняет именно в этот блок); следом ядро uImage; потом rootfs.squashfs (неизменяемый образ файловой системы); и наконец rootfs_data или он же overlay - изменяемая часть, куда пишутся отличия от rootfs если вы изменяете какие-либо файлы. Таким образом, очистив overlay, мы "скинем" файловую систему до "дефолта":
 ```
-sf probe 0; sf erase 0xA50000 0xFFFFFF; reset
+sf probe 0 #выбираем устройство
+sf erase 0xA50000 0xFFFFFF #производим очистку
+reset #перезагрузка
 ```
-Калькулятор адресов для команд доступен [здесь](https://openipc.org/tools/firmware-partitions-calculation). В нашем случае раздел rootfs: 8mb, значит адрес начала overlay будет 0xA50000.
+Калькулятор адресов для команд доступен [здесь](https://openipc.org/tools/firmware-partitions-calculation). В нашем случае раздел rootfs: 8192kb, значит адрес начала overlay будет 0xA50000. Еще проще сбросить до "заводских" прошивки командой `firstboot`.
 
 Загрузчик у этого регистратора не имеет пароля, и в него можно попасть через uart, нажав при старте несколько раз Ctrl+C. Значит, загрузчик мы шить не будем. Env у нас отличаются от заводских, но их проще установить прямо из загрузчика построчно:
 ```
@@ -30,4 +32,11 @@ setenv da; setenv du; setenv dr; setenv dw; setenv dl; setenv dc; setenv up; set
 saveenv #сохраняем новое окружение переменных
 printenv #смотрим, все ли в порядке
 ```
+Оригинальные env и полный дамп микросхемы (16mb) доступны [здесь](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100/original_firmware).
+
 Как вы могли заметить, в переменных uk и ur хранятся макросы для прошивки [uImage](https://github.com/OpenIPC/sandbox-fpv/blob/master/hi3536dv100/uImage.hi3536dv100) и [rootfs.squash](https://github.com/OpenIPC/sandbox-fpv/blob/master/hi3536dv100/rootfs.squashfs.hi3536dv100) с загрузкой их с [tftp сервера](https://pjo2.github.io/tftpd64/), указанного в переменной serverip. Все адреса соответствуют переменной bootargs, содержимое которой и задает разметку файловой системы для ядра при загрузке. По ссылкам доступны ядро и rootfs, собранные мною, они включают в себя wfb-ng; mavfwd; mavlink-forwarder; usb_modeswitch, zerotier, vtund. Однако, при сборке [ссылка на wiki](https://github.com/OpenIPC/wiki/blob/master/en/building.md) туда включаются конфиги для "воздушной" части и mavfwd, собранный для musl, когда нам нужен glibc. Поэтому [придется их перезаписать](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100), это подробнее описано в [заметках о постройке линка](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_link_gk7205v200_hi3536ev100.md).
+
+Итак, после установки переменных можно приступать к прошивке оставшейся части. Запустите tftpd сервер, положите в его корень uImage.hi3536dv100 и rootfs.squashfs.hi3536dv100, выберите соответствующий сетевой интерфейс и в загрузчике запустите макрос: `run uk`. Должен выполниться ряд команд, из вывода которых должно следовать, что файл uImage скачался и прошился во flash. Аналогично выполните `run ur` для прошивки rootfs.
+Если все прошло без ошибок, делайте `reset` и грузитесь в операционную систему, логин root, без пароля. Первой командой выполните firstboot.
+
+Далее залейте конфиги и исполняемые файлы через winscp [etc / usr](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100) и перезагрузите регистратор.
