@@ -1,0 +1,21 @@
+
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+    hwaddress ether $(fw_printenv -n ethaddr || echo 00:24:B8:FF:FF:FF)
+
+#LTE modem
+auto eth1
+iface eth1 inet dhcp
+    pre-up sleep 4
+    pre-up usb_modeswitch -v 0x12d1 -p 0x1f01 -J
+    pre-up modprobe usbserial vendor=0x12d1 product=0x14dc
+    pre-up modprobe rndis_host
+    pre-up sleep 4
+
+manual wlan0
+iface wlan0 inet dhcp
+
+#source-dir /etc/network/interfaces.d
