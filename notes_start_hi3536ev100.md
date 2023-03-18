@@ -8,6 +8,26 @@ mem=150M console=ttyAMA0,115200 panic=20 root=/dev/mtdblock3 rootfstype=squashfs
 ls /dev/mtdb*
 /dev/mtdblock0  /dev/mtdblock1  /dev/mtdblock2  /dev/mtdblock3  /dev/mtdblock4
 ```
-Как следует из вывода, нулевой блок это загрузчик u-boot; далее идет блок для хранения переменных окружения (`printenv`, `setenv` команды пишут в ОЗУ, а `saveenv` сохраняет именно в этот блок); следом ядро uImage; потом rootfs.squashfs (неизменяемый образ файловой системы); и наконец rootfs_data или он же overlay - изменяемая часть, куда пишутся отличия от rootfs если вы изменяете какие-либо файлы. Таким образом, очистив overlay, мы "скинем" файловую систему до "дефолта".
+Как следует из вывода, нулевой блок это загрузчик u-boot; далее идет блок для хранения переменных окружения (`printenv`, `setenv` команды пишут в ОЗУ, а `saveenv` сохраняет именно в этот блок); следом ядро uImage; потом rootfs.squashfs (неизменяемый образ файловой системы); и наконец rootfs_data или он же overlay - изменяемая часть, куда пишутся отличия от rootfs если вы изменяете какие-либо файлы. Таким образом, очистив overlay, мы "скинем" файловую систему до "дефолта":
+```
+sf probe 0; sf erase 0xA50000 0xFFFFFF; reset
+```
+Калькулятор адресов для команд доступен [здесь](https://openipc.org/tools/firmware-partitions-calculation). В нашем случае раздел rootfs: 8mb, значит адрес начала overlay будет 0xA50000.
 
-
+Загрузчик у этого регистратора не имеет пароля, и в него можно попасть через uart, нажав при старте несколько раз Ctrl+C. Значит, загрузчик мы шить не будем. Env у нас отличаются от заводских, но их проще установить прямо из загрузчика построчно:
+```
+setenv ipaddr '192.168.0.222' #тут ip в  вашей подсети из свободных
+setenv serverip '192.168.0.107' #адрес ПК с tftp сервером
+setenv netmask '255.255.255.0'
+setenv bootcmd 'sf probe 0; sf read 0x82000000 0x50000 0x200000; bootm 0x82000000'
+setenv uk 'mw.b 0x82000000 ff 1000000;tftp 0x82000000 uImage.${soc}; sf probe 0; sf erase 0x50000 0x200000; sf write 0x82000000 0x50000 ${filesize}'
+setenv ur 'mw.b 0x82000000 ff 1000000;tftp 0x82000000 rootfs.squashfs.${soc}; sf probe 0; sf erase 0x250000 0x500000; sf write 0x82000000 0x250000 ${filesize}'
+setenv bootargs 'mem=150M console=ttyAMA0,115200 panic=20 root=/dev/mtdblock3 rootfstype=squashfs init=/init mtdparts=hi_sfc:256k(boot),64k(env),2048k(kernel),8192k(rootfs),-(rootfs_data)'
+setenv osmem '256M'
+setenv totalmem '256M'
+setenv soc 'hi3536dv100'
+setenv da; setenv du; setenv dr; setenv dw; setenv dl; setenv dc; setenv up; setenv tk; setenv dd; setenv de; setenv jpeg_addr; setenv jpeg_size; setenv vobuf; setenv loadlogo; setenv appVideoStandard; setenv appSystemLanguage; setenv appCloudExAbility
+saveenv #сохраняем новое окружение переменных
+printenv #смотрим, все ли в порядке
+```
+Как вы могли заметить, в переменных uk и ur хранятся макросы для прошивки [uImage](https://github.com/OpenIPC/sandbox-fpv/blob/master/hi3536dv100/uImage.hi3536dv100) и [rootfs.squash](https://github.com/OpenIPC/sandbox-fpv/blob/master/hi3536dv100/rootfs.squashfs.hi3536dv100) с загрузкой их с [tftp сервера](https://pjo2.github.io/tftpd64/), указанного в переменной serverip. Все адреса соответствуют переменной bootargs, содержимое которой и задает разметку файловой системы для ядра при загрузке. По ссылкам доступны ядро и rootfs, собранные мною, они включают в себя wfb-ng; mavfwd; mavlink-forwarder; usb_modeswitch, zerotier, vtund. Однако, при сборке [ссылка на wiki](https://github.com/OpenIPC/wiki/blob/master/en/building.md) туда включаются конфиги для "воздушной" части и mavfwd, собранный для musl, когда нам нужен glibc. Поэтому [придется их перезаписать](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100), это подробнее описано в [заметках о постройке линка](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_link_gk7205v200_hi3536ev100.md).
