@@ -23,6 +23,8 @@ Andrey Bezborodov из команды OpenIPC предоставил на тес
 
 Пример настройки *GStreamer* на Mission Planner для воспроизведения h265: `udpsrc port=5600 buffer-size=90000 ! application/x-rtp ! rtph265depay ! avdec_h265 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink`
 
+Поддерживаются частоты от 5,2ghz до 5,85ghz.
+
 ### Нюансы на камере
 
 Для данной камеры существует два драйвера сенсора - "медленный" 1080p@30fps и "быстрый" 720p@50fps. Их можно переключать на ходу скриптами из примеров в [root](https://github.com/OpenIPC/sandbox-fpv/tree/master/gk7205v200/root), если залить на камеру ["быстрый" драйвер](https://github.com/OpenIPC/sandbox-fpv/blob/master/gk7205v200/lib/sensors/libsns_imx307_2l_720p.so) под отдельным именем и исправить к нему путь в его конфиге [`60fps/720p_imx307_i2c_2l.ini`](https://github.com/OpenIPC/sandbox-fpv/blob/master/gk7205v200/etc/sensors/60fps/720p_imx307_i2c_2l.ini#L15). Все файлы по данной камере находятся в каталоге `gk7205v200`. Если запускать камеру с "быстрым" драйвером в настройках majestic, то передача видео идет рывками, поэтому при старте камеры через `S95goke` прописываются настройки "медленного" драйвера, после чего уже можно включить "быстрый". На текущий момент ведется работа по управлению подобными настройками камеры через RC каналы в mavlink.
