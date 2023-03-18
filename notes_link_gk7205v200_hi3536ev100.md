@@ -1,8 +1,8 @@
 
 ### Заметки по постройке видеолинка с двусторонней телеметрией mavlink
 
-Воздушная часть линка представляет из себя камеру gk7205v200 с подключенным по USB wifi-адаптером на чипе rtl8812au, например ASUS USB AC-56 или [недорогого более слабого адаптера с ali](https://sl.aliexpress.ru/p?key=8CsTwDB).
-Наземная часть - это видеорегистратор на базе чипа hisilicon hi3536dv100 либо ev100, к которому точно так же подключен по USB адаптер rtl8812au или rtl8814au.
+Воздушная часть линка представляет из себя камеру [gk7205v200](https://sl.aliexpress.ru/p?key=e1sTwWg) с подключенным по USB wifi-адаптером на чипе rtl8812au, например ASUS USB AC-56 или [недорогого более слабого адаптера с ali](https://sl.aliexpress.ru/p?key=8CsTwDB).
+Наземная часть - это [видеорегистратор](https://sl.aliexpress.ru/p?key=L1sTwWG) на базе чипа hisilicon hi3536dv100 либо ev100, к которому точно так же подключен по USB адаптер rtl8812au или rtl8814au.
 Данная статья описывает нюансы создания подобного линка, и является дополнением к [этой статье](https://github.com/OpenIPC/wiki/blob/master/ru/fpv.md).
 
 ![link_hw](https://github.com/OpenIPC/sandbox-fpv/raw/master/notes_files/link_hw.png)
