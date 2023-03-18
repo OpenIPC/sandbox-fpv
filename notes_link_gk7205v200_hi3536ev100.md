@@ -42,19 +42,13 @@ Andrey Bezborodov из команды OpenIPC предоставил на тес
 С применением mavlink-routerd на текущий момент возможна только односторонняя телеметрия по udp, поскольку он не умеет использовать разные rx/tx udp порты в рамках одного endpoint, как того требует wfb-ng, будучи запущенным разными процессами `telemetry_rx` и `telemetry_tx`. Кстати, это просто символьные ссылки на wfb_rx и wfb_tx, создаваемые скриптом [запуска телеметрии](https://github.com/OpenIPC/sandbox-fpv/blob/master/hi3536dv100/usr/bin/telemetry). На текущий момент, для применения двусторонней телеметрии можно вернуть `mavfwd` взамен `mavlink-routerd` в скрипте запуска телеметрии `/usr/bin/telemetry`:
 ```
   #/usr/bin/mavlink-routerd -c /etc/mavlink.conf &
-  if [ -z "${serial}" ] || [ -z "${baud}" ] || [ -z "${port_tx}" ] || [ -z "${port_rx}" ]; then
-     echo "error!"
-  else
-     echo "test ok"
-     while true; do /usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx}; done &
-  fi
+  /usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} &
 ```
-Тогда телеметрия станет доступна на uart регистратора взамен udp по сети, и ее можно будет использовать через usb-uart адаптер как serial port. Такой финт с `while..do` потребовался по причине периодического вылета `mavfwd` на наземке с сообщением `Serial port closed`, и цикл бесконечно его перезапускает, что обеспечивает нормальную работу. Однако, будьте осторожны! Если вы укажете какой то параметр в `telemetry.conf` неверно, то он будет перезапускаться бесконечно и мгновенно, отбирая все ресурсы системы и не позволяя исправить ситуацию через ssh. Лучше перед перезагрузкой проверьте запуск `mavfwd`:
+Необходимо отключить ssh консоль от uart в /etc/inittab, закоменнтировав строчку:
 ```
-. /etc/telemetry.conf
-/usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx}
+#console::respawn:/sbin/getty -L  console 0 vt100 # GENERIC_SERIAL
 ```
-Если запуск произойдет без ошибок, измените `/usr/bin/telemetry` как указано выше и перезапустите регистратор. Также можно отключить запуск сервиса телеметрии в `/etc/wfb.conf`, установив `telemetry=false` и запускать для проверки его вручную: `/usr/bin/telemetry start`.
+Тогда телеметрия станет доступна на uart регистратора взамен udp по сети, и ее можно будет использовать через usb-uart адаптер как serial port.
 
 Я скомпилировал `mavfwd` для регистратора, поддерживающий скорости b230400, b500000, b921600 и b1500000, для поддержки более высокой скорости при работе с Mission Planner, проверил на b500000 при b115200 / b230400 на камере. Для регистратора его можно забрать [здесь](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100/usr/sbin). Для камеры: [здесь](https://github.com/OpenIPC/sandbox-fpv/tree/master/gk7205v200/usr/sbin). На камере удалось получить устойчивую связь с полетником на скорости 230400, выше stm32f4 не смог.
 
