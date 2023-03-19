@@ -6,6 +6,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Заметки о настройке линка на камере gk7205v200 и регистраторе hi3536ev100 (dv100)](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_link_gk7205v200_hi3536ev100.md)
 * [Установка usb_modeswitch на камеру с прошивкой fpv, lite](https://github.com/OpenIPC/sandbox-fpv/blob/master/usb-modeswitch.md)
 * [Заметка о управлении камерой через RC каналы с наземки](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_cam_control.md)
+* [mavfwd для inav (односторонний msp)](https://github.com/OpenIPC/sandbox-fpv/blob/master/user_TipoMan/mavfwd_mavlink2.tar?raw=true)
 
 ### Дорожная карта
 * ~~Запуск видео с передачей с регистратора на пк.~~
