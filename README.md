@@ -1,5 +1,5 @@
 # sandbox-fpv
-Sandbox for FPV experiments
+Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | [link](https://t.me/+BMyMoolVOpkzNWUy)
 
 * [Заметки о прошивке камеры gk7205v200 на OpenIPC](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_start_ivg-g2s.md)
 * [Заметки о прошивке регистратора hi3536ev100 на OpenIPC](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_start_hi3536ev100.md)
