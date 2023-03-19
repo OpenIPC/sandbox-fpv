@@ -24,8 +24,8 @@ video0:
   codec: h265
   rcMode: cbr
   gopSize: 0.3
-  size: 1280x720
-  fps: 50
+  size: 1920x1080
+  fps: 30
 video1:
   enabled: false
 jpeg:
@@ -62,7 +62,7 @@ isp:
   antiFlicker: disabled
   memMode: normal
   rawMode: fast
-  sensorConfig: /etc/sensors/60fps/720p_imx307_i2c_2l.ini
+  sensorConfig: /etc/sensors/imx307_i2c_2l_1080p.ini
 netip:
   enabled: false
 outgoing:
