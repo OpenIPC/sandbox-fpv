@@ -79,10 +79,10 @@ load_interface() {
 }
 
 start_wfb() {
-  wfb_rx -c ${udp_addr} -u ${udp_port} -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} &
+  wfb_rx -c ${udp_addr} -u ${udp_port} -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
   if [ ${use_hdmi} = "true" ]; then
       /root/vdec &
-      wfb_rx -c 127.0.0.1 -u 5000 -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} &
+      wfb_rx -c 127.0.0.1 -u 5000 -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
   fi
 }
 
