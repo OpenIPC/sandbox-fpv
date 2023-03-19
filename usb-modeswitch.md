@@ -1,11 +1,12 @@
 ###  Установка usb_modeswitch на камеру с прошивкой fpv, lite
 ```
 curl -o /usr/sbin/usb_modeswitch http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch && chmod +x /usr/sbin/usb_modeswitch
-curl -o /usr/sbin/usb_modeswitch_dispatcher http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch_dispatcher && chmod +x /usr/sbin/usb_modeswitch_dispatcher
-curl -o /etc/usb_modeswitch.conf http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch.conf
+###curl -o /usr/sbin/usb_modeswitch_dispatcher http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch_dispatcher && chmod +x /usr/sbin/usb_modeswitch_dispatcher
+###curl -o /etc/usb_modeswitch.conf http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch.conf
 curl -o /usr/lib/libusb-1.0.so.0.3.0 http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/libusb-1.0.so.0.3.0 && chmod +x /usr/lib/libusb-1.0.so.0.3.0
 ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so
 ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
+curl -o /tmp/usb_modeswitch.tar http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch.tar && tar -xvf /tmp/usb_modeswitch.tar -C /usr/share/
 ```
 
 Проверяем с модемом e3372h.
