@@ -6,7 +6,6 @@ curl -o /etc/usb_modeswitch.conf http://ubuntu.vmclouds.ru/files/usb-modeswitch/
 curl -o /usr/lib/libusb-1.0.so.0.3.0 http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/libusb-1.0.so.0.3.0 && chmod +x /usr/lib/libusb-1.0.so.0.3.0
 ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so
 ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
-mkdir -p /usr/include/libusb-1.0 && curl -o /usr/include/libusb-1.0/libusb.h http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/libusb.h
 ```
 
 Проверяем с модемом e3372h.
@@ -43,6 +42,7 @@ Bus 002 Device 001: ID 1d6b:0003
 ```
 modprobe usbserial vendor=0x12d1 product=0x14dc
 modprobe rndis_host
+ip link set eth1 up
 ip a
 
 3: eth1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
