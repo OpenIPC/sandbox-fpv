@@ -13,6 +13,9 @@ ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
 curl -o /tmp/usb_modeswitch.tar https://github.com/OpenIPC/sandbox-fpv/raw/master/usb-modeswitch/musl/usb_modeswitch.tar && tar -xvf /tmp/usb_modeswitch.tar -C /usr/share/
 ```
 
+<details>
+  <summary>Резервное хранилище</summary>
+  
 ```
 curl -o /usr/sbin/usb_modeswitch http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch && chmod +x /usr/sbin/usb_modeswitch
 ###curl -o /usr/sbin/usb_modeswitch_dispatcher http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch_dispatcher && chmod +x /usr/sbin/usb_modeswitch_dispatcher
@@ -22,6 +25,9 @@ ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so
 ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
 curl -o /tmp/usb_modeswitch.tar http://ubuntu.vmclouds.ru/files/usb-modeswitch/musl/usb_modeswitch.tar && tar -xvf /tmp/usb_modeswitch.tar -C /usr/share/
 ```
+</details>
+
+
 
 Вносим этот блок для e3372h в /etc/network/interfaces:
 ```
