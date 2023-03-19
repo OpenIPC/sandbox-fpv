@@ -34,4 +34,4 @@ iface eth1 inet dhcp
     pre-up sleep 4
 ```
 
-Передергиваем модем, пробуем `ifup eth1`. Если сетевая поднялась, в interfaces можем manual заменить на auto. 
+Передергиваем модем, пробуем `ifup eth1`. Если сетевая поднялась (есть eth1 в `ip a`), в interfaces можем manual заменить на auto. 
