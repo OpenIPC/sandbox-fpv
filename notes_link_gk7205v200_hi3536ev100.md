@@ -39,7 +39,7 @@ Andrey Bezborodov из команды OpenIPC предоставил на тес
 
 ![telemetry](https://github.com/OpenIPC/sandbox-fpv/raw/master/notes_files/telemetry.png)
 
-``С применением mavlink-routerd на текущий момент возможна только односторонняя телеметрия по udp, поскольку он не умеет использовать разные rx/tx udp порты в рамках одного endpoint, как того требует wfb-ng, будучи запущенным разными процессами `telemetry_rx` и `telemetry_tx`.``
+~~С применением mavlink-routerd на текущий момент возможна только односторонняя телеметрия по udp, поскольку он не умеет использовать разные rx/tx udp порты в рамках одного endpoint, как того требует wfb-ng, будучи запущенным разными процессами `telemetry_rx` и `telemetry_tx`.~~
 Будучи запущенным разными процессами, `telemetry_rx` и `telemetry_tx` используют разные порты для приема и передачи данных (кстати, это просто символьные ссылки на wfb_rx и wfb_tx, создаваемые скриптом [запуска телеметрии](hi3536dv100/usr/bin/telemetry)), и mavlink-router требует в [конфигурации](hi3536dv100/etc/mavlink.conf) два UDP-endpoint, которые должны быть сгуппированны:
 ```
 [UdpEndpoint telemetry_tx]
