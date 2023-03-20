@@ -11,6 +11,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 
 #### Разное
 * [mavfwd для inav (односторонний msp) для камеры](https://github.com/OpenIPC/sandbox-fpv/blob/master/user_TipoMan/mavfwd_mavlink2.tar?raw=true)
+* [Отображение видео на windows и в MP](https://github.com/OpenIPC/sandbox-fpv/blob/master/gstlaunch_on_windows.md)
 
 ### Дорожная карта
 * ~~Запуск видео с передачей с регистратора на пк.~~
