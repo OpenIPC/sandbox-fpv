@@ -7,6 +7,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Заметки о прошивке регистратора hi3536ev100 на OpenIPC](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_start_hi3536ev100.md)
 * [Установка usb_modeswitch на камеру с прошивкой fpv, lite](https://github.com/OpenIPC/sandbox-fpv/blob/master/usb-modeswitch.md)
 * [Заметка о управлении камерой через RC каналы с наземки](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_cam_control.md)
+* [Загрузчик под телеметрию, который не вешает камеру при ребуте](https://github.com/OpenIPC/sandbox-fpv/blob/master/gk7205v200_u-boot-for-telemetry.md)
 
 #### Разное
 * [mavfwd для inav (односторонний msp) для камеры](https://github.com/OpenIPC/sandbox-fpv/blob/master/user_TipoMan/mavfwd_mavlink2.tar?raw=true)
