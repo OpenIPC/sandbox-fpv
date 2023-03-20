@@ -9,22 +9,9 @@ if [ $1 -eq 5 ]; then
     fi
 fi
 
-#channel 7
-if [ $1 -eq 7 ]; then
-    if [ $2 -lt 1400 ]; then
-      yaml-cli -s .image.luminance 20
-      killall -1 majestic
-    elif [ $2 -gt 1400 ] && [ $2 -lt 1600 ]; then
-      yaml-cli -s .image.luminance 50
-      killall -1 majestic
-    else
-      yaml-cli -s .image.luminance 80
-      killall -1 majestic
-    fi
-fi
 
-#channel 8
-if [ $1 -eq 8 ]; then
+#channel 6
+if [ $1 -eq 6 ]; then
     if [ $2 -lt 1500 ]; then
       /root/ircut.sh off
     else
@@ -32,4 +19,17 @@ if [ $1 -eq 8 ]; then
     fi
 fi
 
+#channel 8
+if [ $1 -eq 8 ]; then
+    if [ $2 -lt 1400 ]; then
+      yaml-cli -s .image.luminance 40
+      killall -1 majestic
+    elif [ $2 -gt 1400 ] && [ $2 -lt 1600 ]; then
+      yaml-cli -s .image.luminance 60
+      killall -1 majestic
+    else
+      yaml-cli -s .image.luminance 90
+      killall -1 majestic
+    fi
+fi
 exit 1
