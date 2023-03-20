@@ -1,3 +1,5 @@
+#use: ./ircut.sh on | off
+
 function gpio_setup {
   if [ ! -e /sys/class/gpio/gpio$1 ]; then
     echo $1 > /sys/class/gpio/export
@@ -25,7 +27,6 @@ function ircut_off {
 
 gpio_setup 8 out
 gpio_setup 9 out
-ircut_on
-sleep 3s
-ircut_off
+ircut_$1
+
 
