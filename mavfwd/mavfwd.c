@@ -25,7 +25,7 @@ const int default_baudrate = 115200;
 const char *defualt_out_addr = "127.0.0.1:14600";
 const char *default_in_addr = "127.0.0.1:14601";
 
-uint16_t ch[12];
+uint16_t ch[10];
 
 struct bufferevent *serial_bev;
 struct sockaddr_in sin_out = {
@@ -124,23 +124,23 @@ static void dump_mavlink_packet(unsigned char *data, const char *direction)
 	printf("%s sender %d/%d\t%d\t%d\n", direction, sys_id, comp_id, seq,
 	       msg_id);
 	
-	//RC_CHANNELS ( #65 ) hook
-	if(msg_id == 65) {
-	    uint8_t offset = 11;
-	    for(uint8_t i=0; i < sizeof(ch); i++) {
-		//we do not check channels other than those indicated
-		if(i != 7 && i != 8 && i != 9) continue;
-		
-		if(ch[i] != data[offset]) {
-		    ch[i] = data[offset];
-		    char buff[30];
-		    sprintf(buff, "/root/channels.sh %d %d", i, data[offset]);
-		    system(buff);
-		}
-		offset = offset + 2;
-	    }
-	}
-	
+	//RC_CHANNELS_OVERRIDE ( #70 ) hook //or RC_CHANNELS #65
+	if(msg_id == 70) {
+    uint8_t offset = 15;
+    for(uint8_t i=0; i < sizeof(ch); i++) {
+        //we do not check channels other than those indicated
+        if(i != 4 && i != 5 && i != 6 && i != 7) continue;
+        uint16_t val = data[offset+1] | (data[offset] << 8);
+        if(ch[i] != val) {
+            ch[i] = val;
+            //printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ch %d val %d \n", i+1, val);
+            char buff[30];
+            sprintf(buff, "/root/channels.sh %d %d", i+1, val);
+            system(buff);
+         }
+        offset = offset + 2;
+	  }
+	} //msg_id
 }
 
 /* https://discuss.ardupilot.org/uploads/short-url/vS0JJd3BQfN9uF4DkY7bAeb6Svd.pdf
