@@ -23,4 +23,13 @@ if [ $1 -eq 7 ]; then
     fi
 fi
 
+#channel 8
+if [ $1 -eq 8 ]; then
+    if [ $2 -lt 1500 ]; then
+      /root/ircut.sh off
+    else
+      /root/ircut.sh on
+    fi
+fi
+
 exit 1
