@@ -9,7 +9,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Заметка о управлении камерой через RC каналы с наземки](https://github.com/OpenIPC/sandbox-fpv/blob/master/notes_cam_control.md)
 
 #### Разное
-* [mavfwd для inav (односторонний msp)](https://github.com/OpenIPC/sandbox-fpv/blob/master/user_TipoMan/mavfwd_mavlink2.tar?raw=true)
+* [mavfwd для inav (односторонний msp) для камеры](https://github.com/OpenIPC/sandbox-fpv/blob/master/user_TipoMan/mavfwd_mavlink2.tar?raw=true)
 
 ### Дорожная карта
 * ~~Запуск видео с передачей с регистратора на пк.~~
