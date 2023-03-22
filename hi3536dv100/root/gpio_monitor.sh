@@ -27,7 +27,12 @@ while [ true ]
 do
   get_gpio 6
   if [ "$?" -eq 0 ]; then
-      echo 6
+      ifdown usb0
+      ifup usb0
+      sleep .5
+      /etc/init.d/S98wfb stop
+      sleep .5
+      /etc/init.d/S98wfb start
       sleep .5
   fi
   
