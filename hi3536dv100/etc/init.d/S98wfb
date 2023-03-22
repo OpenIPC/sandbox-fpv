@@ -80,7 +80,9 @@ load_interface() {
 
 start_wfb() {
   #forward to PC
-  wfb_rx -c ${udp_addr} -u ${udp_port} -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
+  if [ ! -z "${udp_addr}" ]; then
+      wfb_rx -c ${udp_addr} -u ${udp_port} -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
+  fi
   #use tablet as usb-modem
   if [ -d "/sys/class/net/usb0" ]; then
       echo found usb0 device
