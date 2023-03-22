@@ -2,12 +2,14 @@
 #
 # Start telemetry
 #
+#telemetry_rx -p ${stream_rx} -c ${PHONE_IP} -u 14550 -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
 
 . /etc/telemetry.conf
 
 keydir="/etc"
 
 start_telemetry() {
+  echo "Loading MAVLink telemetry service..."
   if [ ! -f /usr/bin/telemetry_rx -a ! -f /usr/bin/telemetry_tx ]; then
 	  ln -s /usr/bin/wfb_rx /usr/bin/telemetry_rx ; chmod +x /usr/bin/telemetry_rx
 	  ln -s /usr/bin/wfb_tx /usr/bin/telemetry_tx ; chmod +x /usr/bin/telemetry_tx
@@ -17,23 +19,39 @@ start_telemetry() {
 	fi
 	telemetry_rx -p ${stream_rx} -c 127.0.0.1 -u ${port_rx} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
   fi
+  #for tablet osd (FPV-VR)
+  if [ -d "/sys/class/net/usb0" ]; then
+      echo found usb0 device
+      PHONE_IP=`ip route show 0.0.0.0/0 dev usb0 | cut -d\  -f3`
+      echo ${PHONE_IP}
+      MAVROUTARG="-e ${PHONE_IP}:14550"
+  fi
+  /usr/bin/mavlink-routerd -c /etc/mavlink.conf ${MAVROUTARG} &
+  #/usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} >/dev/null &
+  echo "Done."
+}
+
+stop_telemetry() {
+  echo "Stopping telemetry service..."
+	kill -9 $(pidof telemetry_rx)
+	kill -9 $(pidof telemetry_tx)
+	kill -9 $(pidof mavlink-routerd)
+	kill -9 $(pidof mavfwd)
 }
 
 case "$1" in
   start)
-	echo "Loading MAVLink telemetry service..."
-  /usr/bin/mavlink-routerd -c /etc/mavlink.conf &
-  #/usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} >/dev/null &
-	start_telemetry
-
-	echo "Done."
+      start_telemetry
 	;;
   stop)
-	echo "Stopping telemetry service..."
-	kill -9 $(pidof telemetry_rx)
-	kill -9 $(pidof telemetry_tx)
+      stop_telemetry
+
+	;;
+	restart)
+      stop_telemetry
+      start_telemetry
 	;;
     *)
-	echo "Usage: $0 {start|stop}"
+	echo "Usage: $0 {start|stop|restart}"
 	exit 1
 esac
