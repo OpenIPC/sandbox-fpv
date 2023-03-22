@@ -10,7 +10,7 @@ case "$1" in
     ;;
   stop)
     echo "Stopping gpio_monitor daemon..."
-    kill -9 $(pidof gpio_monitor.sh)
+    kill -9 $(pidof {exe} ash /root/gpio_monitor.sh)
     ;;
     *)
     echo "Usage: $0 {start|stop}"
