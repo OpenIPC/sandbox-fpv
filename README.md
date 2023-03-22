@@ -8,6 +8,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Установка usb_modeswitch на камеру с прошивкой fpv, lite](usb-modeswitch.md)
 * [Заметка о управлении камерой через RC каналы с наземки](notes_cam_control.md)
 * [Загрузчик под телеметрию для gk7502v200, который не вешает камеру при ребуте](gk7205v200_u-boot-7502v200-for-telemetry.md)
+* [Подключение и настройка планшета или смартфона для видео и OSD по USB](usb-tethering.md)
 
 #### Разное
 * [mavfwd для inav (односторонний msp) для камеры](user_TipoMan/mavfwd_mavlink2.tar?raw=true)
