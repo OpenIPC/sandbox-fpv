@@ -79,25 +79,30 @@ load_interface() {
 }
 
 start_wfb() {
+  #forward to PC
   wfb_rx -c ${udp_addr} -u ${udp_port} -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
+  #use tablet as usb-modem
+  if [ -d "/sys/class/net/usb0" ]; then
+      echo found usb0 device
+      PHONE_IP=`ip route show 0.0.0.0/0 dev usb0 | cut -d\  -f3`
+      echo ${PHONE_IP}
+      wfb_rx -c ${PHONE_IP} -u 5600 -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &  
+  fi
+  
+  #use hdmi
   if [ ${use_hdmi} = "true" ]; then
       /root/vdec &
       wfb_rx -c 127.0.0.1 -u 5000 -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
   fi
 }
 
-case "$1" in
-  start)
-    if [ ${daemon} -eq 1 ]; then
-
+start_all() {
+  if [ ${daemon} -eq 1 ]; then
 	  echo "Loading modules and wifi card driver..."
-
 	  load_modules
-
 	  echo "Preparing interface wlan..."
-	  
 	  load_interface
-	  
+
 	  if ! cat ${keydir}/gs.key > /dev/null 2>&1; then
 		echo "Generating drone & ground station keys..."
 		cd ${keydir} ; wfb_keygen
@@ -106,9 +111,7 @@ case "$1" in
 	  fi
 
 	  echo "Starting Wifibroadcast service..."
-	  
 	  start_wfb
-
 	  echo "Done."
 
 	  if [ ${telemetry} = "true" ]; then
@@ -122,12 +125,26 @@ case "$1" in
 	else
       echo "Wifibroadcast service disabled in wfb.conf..."
 	fi
-    ;;
-  stop)
+}
+
+stop_all() {
     echo "Stopping wifibroadcast service..."
-    kill -9 $(pidof wfb_tx)
-    ;;
-    *)
-    echo "Usage: $0 {start|stop}"
+    kill -9 $(pidof wfb_rx)
+    /usr/bin/telemetry stop
+}
+
+case "$1" in
+  start)
+      start_all
+  ;;
+  stop)
+      stop_all
+  ;;
+  restart)
+      stop_all
+      start_all
+  ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
     exit 1
 esac
