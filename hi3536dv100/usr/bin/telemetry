@@ -23,7 +23,7 @@ start_telemetry() {
   if [ -d "/sys/class/net/usb0" ]; then
       echo found usb0 device
       PHONE_IP=`ip route show 0.0.0.0/0 dev usb0 | cut -d\  -f3`
-      echo ${PHONE_IP}
+      echo usb-modem ip: ${PHONE_IP}
       MAVROUTARG="-e ${PHONE_IP}:14550"
   fi
   /usr/bin/mavlink-routerd -c /etc/mavlink.conf ${MAVROUTARG} &
