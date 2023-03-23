@@ -29,9 +29,6 @@ do
 done
 
 gpio_setup 10 out
-#gpio_setup 16 out
 set_gpio 10 1
-#set_gpio 16 1
 sleep 5
-set_gpio 10 0
-#set_gpio 16 0
+#set_gpio 10 0
