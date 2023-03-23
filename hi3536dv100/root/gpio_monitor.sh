@@ -4,8 +4,8 @@
 ##X2 !13
 ##Y3 !8
 ##X1 !7
-##ALARM 40
-##REC 16
+##ALARM 10
+##REC 11
 
 function gpio_setup {
   if [ ! -e /sys/class/gpio/gpio$1 ]; then
