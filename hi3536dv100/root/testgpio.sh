@@ -28,10 +28,10 @@ do
   echo $i: `get_gpio $i`
 done
 
-#gpio_setup 8 out
-#set_gpio 8 0
-#ls /sys/class/gpio
-
-
-
-#default 1: 6 7 8 13 17 34 35 36 41 44
+gpio_setup 10 out
+#gpio_setup 16 out
+set_gpio 10 1
+#set_gpio 16 1
+sleep 5
+set_gpio 10 0
+#set_gpio 16 0
