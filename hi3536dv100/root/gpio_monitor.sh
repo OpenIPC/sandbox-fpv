@@ -80,4 +80,5 @@ do
       set_gpio 10 0
   fi
 
+  sleep .2
 done
