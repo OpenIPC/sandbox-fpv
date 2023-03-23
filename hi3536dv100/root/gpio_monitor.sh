@@ -36,8 +36,8 @@ while [ true ]
 do
   get_gpio 6
   if [ "$?" -eq 0 ]; then
-      echo 6 >>/tmp/gpio.log
       set_gpio 10 1
+      echo 6 >>/tmp/gpio.log
       ifdown usb0
       ifup usb0
       sleep .1
@@ -50,38 +50,34 @@ do
   
   get_gpio 7
   if [ "$?" -eq 0 ]; then
+      set_gpio 10 1
       echo 7 >>/tmp/gpio.log
       sleep .5
+      set_gpio 10 0
   fi
   
   get_gpio 8
   if [ "$?" -eq 0 ]; then
+      set_gpio 10 1
       echo 8 >>/tmp/gpio.log
       sleep .5
+      set_gpio 10 0
   fi
   
   get_gpio 13
   if [ "$?" -eq 0 ]; then
+      set_gpio 10 1
       echo 13 >>/tmp/gpio.log
       sleep .5
+      set_gpio 10 0
   fi
-  
-  get_gpio 16
-  if [ "$?" -eq 1 ]; then
-      echo 16 >>/tmp/gpio.log
-      sleep .5
-  fi
-  
+
   get_gpio 17
   if [ "$?" -eq 0 ]; then
+      set_gpio 10 1
       echo 17 >>/tmp/gpio.log
       sleep .5
+      set_gpio 10 0
   fi
-  
-  get_gpio 40
-  if [ "$?" -eq 1 ]; then
-      echo 40 >>/tmp/gpio.log
-      sleep .5
-  fi
-  sleep .1
+
 done
