@@ -14,27 +14,38 @@ function gpio_setup {
   echo $2 > /sys/class/gpio/gpio$1/direction
 }
 
+function set_gpio {
+  echo $2 > /sys/class/gpio/gpio$1/value
+}
+
+
 function get_gpio {
   return `cat /sys/class/gpio/gpio${1}/value`
 }
 
-for i in 6 7 8 13 16 17 40
+#buttons
+for i in 6 7 8 13 17
 do
   gpio_setup $i in
 done
+
+#ALARM led
+gpio_setup 10 out
 
 while [ true ]
 do
   get_gpio 6
   if [ "$?" -eq 0 ]; then
       echo 6 >>/tmp/gpio.log
+      set_gpio 10 1
       ifdown usb0
       ifup usb0
-      sleep .5
+      sleep .1
       /etc/init.d/S98wfb stop
-      sleep .5
+      sleep .1
       /etc/init.d/S98wfb start
       sleep .5
+      set_gpio 10 0
   fi
   
   get_gpio 7
