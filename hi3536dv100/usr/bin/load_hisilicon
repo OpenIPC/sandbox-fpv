@@ -45,7 +45,7 @@ insert_ko() {
   if [[ $? -ne 0 ]]; then
     exit;
   fi
-  
+
   insmod /lib/wdt.ko
   rmmod /lib/wdt.ko
 
