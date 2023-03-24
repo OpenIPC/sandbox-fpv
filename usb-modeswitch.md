@@ -15,7 +15,7 @@ curl -o /usr/sbin/usb_modeswitch http://fpv.openipc.net/files/usb-modeswitch/gli
 curl -o /usr/lib/libusb-1.0.so.0.3.0 http://fpv.openipc.net/files/usb-modeswitch/glibc/libusb-1.0.so.0.3.0 && chmod +x /usr/lib/libusb-1.0.so.0.3.0
 ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so
 ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
-ln -s /lib/libc-2.32.so /lib/libc.so
+ln -s -f /lib/libc-2.32.so /lib/libc.so
 ```
 
 
