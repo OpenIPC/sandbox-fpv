@@ -83,24 +83,24 @@ Port = 14551
 ### Текущие проблемы
 Если при загрузке камеры в majestic выбран "быстрый" драйвер 720p, то видео идёт рывками, поэтому в S95goke (автозапуск majestic) перед стартом идёт установка "обычного" драйвера 1080p. Если вы хотите использовать при загрузке камеры 720p@50 по умолчанию, вставьте после загрузки majestic вызов скрипта переключения в `/etc/init.d/S95goke` в функции `load_majestic`:
 ```
-  yaml-cli -s .isp.sensorConfig /etc/sensors/imx307_i2c_2l_1080p.ini
-  yaml-cli -s .video0.size 1920x1080
-  yaml-cli -s .video0.fps 30
-  killall -1 majestic
+yaml-cli -s .isp.sensorConfig /etc/sensors/imx307_i2c_2l_1080p.ini
+yaml-cli -s .video0.size 1920x1080
+yaml-cli -s .video0.fps 30
+killall -1 majestic
 
-	start-stop-daemon -b -m -S -q -p "$PIDFILE" -x "/usr/bin/$DAEMON" \
-		-- $DAEMON_ARGS
-	status=$?
-	if [ "$status" -eq 0 ]; then
-		echo "OK"
-	else
-		echo "FAIL"
-	fi
-  #ВСТАВИТЬ ЭТО	
-	sleep .5
-	/root/720.sh
-	#/ВСТАВИТЬ ЭТО	
-	return "$status"
+start-stop-daemon -b -m -S -q -p "$PIDFILE" -x "/usr/bin/$DAEMON" \
+	-- $DAEMON_ARGS
+status=$?
+if [ "$status" -eq 0 ]; then
+	echo "OK"
+else
+	echo "FAIL"
+fi
+#ВСТАВИТЬ ЭТО	
+sleep .5
+/root/720.sh
+#/ВСТАВИТЬ ЭТО	
+return "$status"
 ```
 
 ##### продолжение следует
