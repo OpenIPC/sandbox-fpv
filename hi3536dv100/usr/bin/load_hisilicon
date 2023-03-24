@@ -20,12 +20,12 @@ report_error() {
 }
 
 insert_audio() {
-  #insmod hi3536dv100_aio.ko
-  #insmod hi3536dv100_ai.ko
-  #insmod hi3536dv100_ao.ko
-  #insmod hi3536dv100_aenc.ko
-  #insmod hi3536dv100_adec.ko
-  #insmod hi_acodec.ko
+  insmod hi3536dv100_aio.ko
+  insmod hi3536dv100_ai.ko
+  insmod hi3536dv100_ao.ko
+  insmod hi3536dv100_aenc.ko
+  insmod hi3536dv100_adec.ko
+  insmod hi_acodec.ko
 }
 
 remove_audio() {
@@ -67,7 +67,7 @@ insert_ko() {
 
   #insmod hi3536dv100_jpege.ko
   
-  insert_audio
+  #insert_audio
 }
 
 remove_ko() {
