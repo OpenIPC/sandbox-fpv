@@ -31,6 +31,10 @@ load_majestic() {
 	else
 		echo "FAIL"
 	fi
+	
+	#sleep .5
+	#/root/720.sh
+	
 	return "$status"
 }
 
