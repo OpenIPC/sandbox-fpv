@@ -4,6 +4,10 @@ start() {
   
 	load_hisilicon -i
 	modprobe tun
+  echo "disabling wdt"
+  insmod /lib/wdt.ko
+  rmmod /lib/wdt.ko
+
 	#modprobe rt2800usb
   #modprobe mt7601u
 	#/root/vdec &	
