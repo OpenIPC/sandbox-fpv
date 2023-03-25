@@ -52,6 +52,7 @@ do
   if [ "$?" -eq 0 ]; then
       set_gpio 10 1
       echo 7 >>/tmp/gpio.log
+      ifconfig eth0:1 192.168.11.1
       sleep .5
       set_gpio 10 0
   fi
