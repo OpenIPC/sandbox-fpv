@@ -16,7 +16,6 @@
           pre-up sed -i '2i \\tscan_ssid=1' /tmp/wpa_supplicant.conf
           pre-up sleep 3
           pre-up wpa_supplicant -B -D nl80211 -i wlan1 -c/tmp/wpa_supplicant.conf
-          post-up /etc/init.d/S98wfb restart
           post-down killall -q wpa_supplicant
 ```
 ### Поправим конфиги сервисы
