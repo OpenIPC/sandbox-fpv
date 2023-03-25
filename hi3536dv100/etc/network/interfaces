@@ -23,14 +23,15 @@ iface eth1 inet dhcp
 manual wlan0
 iface wlan0 inet dhcp
 
-manual wlan1
+auto wlan1
 iface wlan1 inet dhcp
-    pre-up modprobe rtl8xxxu.ko
-    pre-up sleep 3
+    pre-up insmod /lib/modules/4.9.37/extra/8188eu.ko
+    pre-up sleep 6
     pre-up wpa_passphrase "whoimtab" "37376338" >/tmp/wpa_supplicant.conf
     pre-up sed -i '2i \\tscan_ssid=1' /tmp/wpa_supplicant.conf
     pre-up sleep 3
     pre-up wpa_supplicant -B -D nl80211 -i wlan1 -c/tmp/wpa_supplicant.conf
+    post-up /etc/init.d/S98wfb restart
     post-down killall -q wpa_supplicant
 
 #USB Tethering
