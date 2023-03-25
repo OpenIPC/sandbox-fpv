@@ -91,6 +91,9 @@ start_wfb() {
       wfb_rx -c ${PHONE_IP} -u 5600 -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &  
   fi
   #use tablet as wifi-ap
+  if [ ! -z ${tab_wlan} ]; then
+    ifup ${tab_wlan}
+  fi
   if [ -d "/sys/class/net/${tab_wlan}" ]; then
       echo found ${tab_wlan} ap
       TAB_IP=`ip route show 0.0.0.0/0 dev ${tab_wlan} | cut -d\  -f3`
