@@ -26,8 +26,8 @@ iface wlan0 inet dhcp
 auto wlan1
 iface wlan1 inet dhcp
     pre-up insmod /lib/modules/4.9.37/extra/8188eu.ko
-    pre-up sleep 6
-    pre-up wpa_passphrase "whoimtab" "37376338" >/tmp/wpa_supplicant.conf
+    pre-up sleep 1
+    pre-up wpa_passphrase "ssid" "password" >/tmp/wpa_supplicant.conf
     pre-up sed -i '2i \\tscan_ssid=1' /tmp/wpa_supplicant.conf
     pre-up sleep 3
     pre-up wpa_supplicant -B -D nl80211 -i wlan1 -c/tmp/wpa_supplicant.conf
