@@ -78,7 +78,7 @@ load_interface() {
 }
 
 start_wfb() {
-  wfb_tx -p ${stream} -u ${udp_port} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -n ${fec_n} -T ${fec_timeout} -i ${link_id} ${wlan} &
+  wfb_tx -r ${stream} -u ${udp_port} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -p ${fec} ${wlan} &
 }
 
 case "$1" in
