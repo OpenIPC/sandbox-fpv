@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# disable hisilicon watchdog
+#
+
+case "$1" in
+  start)
+    echo "Disabling watchdog..."
+    insmod /lib/wdt.ko
+    rmmod /lib/wdt.ko
+    ;;
+  stop)
+    echo "Not need any action..."
+    ;;
+    *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+esac

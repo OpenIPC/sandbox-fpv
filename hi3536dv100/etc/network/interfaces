@@ -27,7 +27,7 @@ manual wlan1
 iface wlan1 inet dhcp
     pre-up modprobe rtl8xxxu.ko
     pre-up sleep 3
-    pre-up wpa_passphrase "wifi-ssid" "password" >/tmp/wpa_supplicant.conf
+    pre-up wpa_passphrase "whoimtab" "37376338" >/tmp/wpa_supplicant.conf
     pre-up sed -i '2i \\tscan_ssid=1' /tmp/wpa_supplicant.conf
     pre-up sleep 3
     pre-up wpa_supplicant -B -D nl80211 -i wlan1 -c/tmp/wpa_supplicant.conf
