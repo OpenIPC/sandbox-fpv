@@ -4,7 +4,7 @@
 #
 #telemetry_rx -p ${stream_rx} -c ${PHONE_IP} -u 14550 -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
 
-. /etc/wfb.conf
+eval `cat /etc/wfb.conf | grep tab_wlan`
 . /etc/telemetry.conf
 
 keydir="/etc"
