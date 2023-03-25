@@ -4,6 +4,7 @@
 #
 #telemetry_rx -p ${stream_rx} -c ${PHONE_IP} -u 14550 -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
 
+eval `cat /etc/wfb.conf | grep tab_wlan`
 . /etc/telemetry.conf
 
 keydir="/etc"
@@ -19,12 +20,19 @@ start_telemetry() {
 	fi
 	telemetry_rx -r ${stream_rx} -c 127.0.0.1 -u ${port_rx} -K ${keydir}/gs.key ${wlan} >/dev/null &
   fi
-  #for tablet osd (FPV-VR)
+  #for tablet osd (FPV-VR) as usb
   if [ -d "/sys/class/net/usb0" ]; then
       echo found usb0 device
       PHONE_IP=`ip route show 0.0.0.0/0 dev usb0 | cut -d\  -f3`
       echo usb-modem ip: ${PHONE_IP}
-      MAVROUTARG="-e ${PHONE_IP}:14550"
+      MAVROUTARG=" -e ${PHONE_IP}:14550"
+  fi
+  #for tablet osd (FPV-VR) as AP
+  if [ -d "/sys/class/net/${tab_wlan}" ]; then
+      echo found ${tab_wlan} device
+      TAB_IP=`ip route show 0.0.0.0/0 dev ${tab_wlan} | cut -d\  -f3`
+      echo Tab AP ip: ${TAB_IP}
+      MAVROUTARG=" -e ${TAB_IP}:14550"
   fi
   /usr/bin/mavlink-routerd -c /etc/mavlink.conf ${MAVROUTARG} &
   #/usr/sbin/mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} >/dev/null &
