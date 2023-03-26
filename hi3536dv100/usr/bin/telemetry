@@ -16,22 +16,20 @@ start_telemetry() {
 	  ln -s /usr/bin/wfb_tx /usr/bin/telemetry_tx ; chmod +x /usr/bin/telemetry_tx
   else
 	if [ ${one_way} = "false" ]; then
-	  telemetry_tx -r ${stream_tx} -u ${port_tx} -K ${keydir}/gs.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -p ${fec} ${wlan} >/dev/null &
+	  telemetry_tx -r ${stream_tx} -u ${port_tx} -K ${keydir}/gs.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -p ${fec_p} ${wlan} >/dev/null &
 	fi
 	telemetry_rx -r ${stream_rx} -c 127.0.0.1 -u ${port_rx} -K ${keydir}/gs.key ${wlan} >/dev/null &
   fi
   #for tablet osd (FPV-VR) as usb
-  if [ -d "/sys/class/net/usb0" ]; then
-      echo found usb0 device
-      PHONE_IP=`ip route show 0.0.0.0/0 dev usb0 | cut -d\  -f3`
-      echo usb-modem ip: ${PHONE_IP}
+  PHONE_IP=`ip route show 0.0.0.0/0 dev usb0 | cut -d\  -f3`
+  if [ ! -z ${PHONE_IP} ]; then
+      echo found usb0 device, usb-modem ip: ${PHONE_IP}
       MAVROUTARG=" -e ${PHONE_IP}:14550"
   fi
   #for tablet osd (FPV-VR) as AP
-  if [ -d "/sys/class/net/${tab_wlan}" ]; then
-      echo found ${tab_wlan} device
-      TAB_IP=`ip route show 0.0.0.0/0 dev ${tab_wlan} | cut -d\  -f3`
-      echo Tab AP ip: ${TAB_IP}
+  TAB_IP=`ip route show 0.0.0.0/0 dev ${tab_wlan} | cut -d\  -f3`
+  if [ ! -z ${TAB_IP} ]; then
+      echo found ${tab_wlan} device, tab ip: ${TAB_IP}
       MAVROUTARG=" -e ${TAB_IP}:14550"
   fi
   /usr/bin/mavlink-routerd -c /etc/mavlink.conf ${MAVROUTARG} &
