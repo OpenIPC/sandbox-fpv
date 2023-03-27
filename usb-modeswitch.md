@@ -1,4 +1,4 @@
-###  Установка usb_modeswitch на камеру с прошивкой fpv, lite и MVR hi3536[ed]v100
+###  Установка usb_modeswitch на камеру с прошивкой fpv, lite и NVR hi3536[ed]v100
 
 Проверяем с модемом e3372h.
 
