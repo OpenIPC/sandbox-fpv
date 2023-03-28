@@ -12,7 +12,7 @@ Usage:
  [-a addr] ip address send to, default 127.0.0.1;
  [-p port] udp port send to, default 14650;
  [-t time] update RC_CHANNEL_OVERRIDE time in ms, default 50;
- [-x axes_count] 2..9 axes, subsequent ones will be buttons;
+ [-x axes_count] 2..9 axes, default 5, other channels mapping to js buttons from button 0;
 ```
 
 Например, отправлять можно не в telemetry_tx, а в mavlink_routerd, если вам так нужно. Пакет для сборки в buildroot от OpenIPC [тут](rcjoystick).
