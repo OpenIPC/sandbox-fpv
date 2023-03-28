@@ -13,6 +13,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Подключение и настройка планшета или смартфона для видео и OSD по USB](usb-tethering.md)
 * [Управление кнопками с front panel на регистраторе](nvr_gpio.md)
 * [Подключение планшета к регистратору по wifi через AP планшета](note-nvr-tab-ap.md)
+* [Использование аппаратуры как джойстика для передачи каналов RC через mavlink](rcjoystick.md)
 
 #### Разное
 * [mavfwd для inav (односторонний msp) для камеры](user_TipoMan/mavfwd_mavlink2.tar?raw=true)
