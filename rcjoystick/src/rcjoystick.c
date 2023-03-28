@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
             axes_count = atoi(optarg);
             break;
         case 'h':
-            printf("rcjoystick by whoim@mail.ru\ncapture usb-hid joystic state and share to mavlink reciever as RC_CHANNELS_OVERRIDE packets\nUsage:\n [-v] verbose;\n [-d device] default '/dev/input/js0';\n [-a addr] ip address send to, default 127.0.0.1;\n [-p port] udp port send to, default 14650;\n [-t time] update RC_CHANNEL_OVERRIDE time in ms, default 50;\n [-x axes_count] 2..9 axes, default 5, subsequent ones will be buttons;\n");
+            printf("rcjoystick by whoim@mail.ru\ncapture usb-hid joystic state and share to mavlink reciever as RC_CHANNELS_OVERRIDE packets\nUsage:\n [-v] verbose;\n [-d device] default '/dev/input/js0';\n [-a addr] ip address send to, default 127.0.0.1;\n [-p port] udp port send to, default 14650;\n [-t time] update RC_CHANNEL_OVERRIDE time in ms, default 50;\n [-x axes_count] 2..9 axes, default 5, other channels mapping to js buttons from button 0;\n");
             return 0;
         }
   }
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
     printf("Device: %s, %d axes, %d buttons\n", device, get_axes_count(js), get_button_count(js));
     printf("Update time: %dms\n", send_time);
     printf("UDP: %s:%d\n", inet_ntoa(sin_out.sin_addr), ntohs(sin_out.sin_port));
-    printf("Used axes: %d, last channels as buttons", axes_count);
+    printf("Used axes: %d, other channels as buttons\n", axes_count);
     printf("Started\n");
     
     do //while not errno read js
