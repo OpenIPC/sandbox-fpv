@@ -70,12 +70,11 @@ long long millis() {
     struct timeval te; 
     gettimeofday(&te, NULL); // get current time
     long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
-    // printf("milliseconds: %lld\n", milliseconds);
     return milliseconds;
 }
 
-uint16_t axes_to_ch(int16_t val, uint16_t add) {
-    return ((32768 + val) / 65.535) + add;
+uint16_t axes_to_ch(int16_t val) {
+    return ((32768 + val) / 65.535) + 1000;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +83,17 @@ int main(int argc, char *argv[])
   const char *device;
   int js;
   struct js_event event;
-  struct axis_state axes[9] = {0};
+  struct axis_state axes[9] = {
+      { 0, 0 },           //ch1/2 default
+      { -32768, 0 },      //ch3/4 default
+      { -32768, -32768 }, //ch5/6 default
+      { -32768, -32768 }, //ch7/8 default
+      { -32768, -32768 }, //ch9/10 default
+      { -32768, -32768 }, //ch11/12 default
+      { -32768, -32768 }, //ch13/14 default
+      { -32768, -32768 }, //ch15/16 default
+      { -32768, -32768 }, //ch17/18 default
+      };
   size_t axis;
 
   //udp sock
@@ -97,12 +106,13 @@ int main(int argc, char *argv[])
       .sin_family = AF_INET,
   };
 
-  int buttons[32];
+  int buttons[6];
   
   //time checker
   long long time_check = millis();
   uint16_t send_time = 50;
-  
+  struct timespec tw = {0,10};
+  struct timespec tr;
   //args
   int opt;
   bool verbose = false;
@@ -158,52 +168,53 @@ int main(int argc, char *argv[])
     do //while not errno read js
     {
      errsv = 11; //reset
-     read_event(js, &event);
-     switch (event.type)
-        {
-            case JS_EVENT_BUTTON:
-                if (verbose) printf("Button %u %s\n", event.number, event.value ? "pressed" : "released");
-                buttons[event.number] = event.value ? 1999 : 1000;
-                break;
-            case JS_EVENT_AXIS:
-                axis = get_axis_state(&event, axes);
-                if (axis < axes_count)
-                    if (verbose) printf("Axis %zu at (%6d, %6d)\n", axis, axes[axis].x, axes[axis].y);
-                break;
-            default:
-                // Ignore init events.
-                break;
+     if( read_event(js, &event) == 0 ) {
+         switch (event.type)
+            {
+                case JS_EVENT_BUTTON:
+                    if (verbose) printf("Button %u %s\n", event.number, event.value ? "pressed" : "released");
+                    buttons[event.number] = event.value ? 2000 : 1000;
+                    break;
+                case JS_EVENT_AXIS:
+                    axis = get_axis_state(&event, axes);
+                    if (axis < axes_count)
+                        if (verbose) printf("Axis %zu at (%6d, %6d)\n", axis, axes[axis].x, axes[axis].y);
+                    break;
+                default:
+                    // Ignore init events.
+                    break;
+            }
         }
-        
+        //send to udp
         if( (long long)time_check + send_time < millis() ){
             mavlink_msg_rc_channels_override_pack(255, 190, &msg, 0, 0,
-                    axes_to_ch(axes[0].x, 1000), //ch1
-                    axes_to_ch(axes[0].y, 1000), //ch2
-                    axes_to_ch(axes[1].x, 1000), //ch3
-                    axes_to_ch(axes[1].y, 1000), //ch4
+                    axes_to_ch(axes[0].x), //ch1
+                    axes_to_ch(axes[0].y), //ch2
+                    axes_to_ch(axes[1].x), //ch3
+                    axes_to_ch(axes[1].y), //ch4
                     
-                    (axes_count > 2) ? axes_to_ch(axes[2].x, 1000) : buttons[(axes_count - 2)],     //ch5
-                    (axes_count > 2) ? axes_to_ch(axes[2].y, 1000) : buttons[(axes_count - 2) + 1], //ch6
-                    (axes_count > 3) ? axes_to_ch(axes[3].x, 1000) : buttons[(axes_count - 3)],     //ch7
-                    (axes_count > 3) ? axes_to_ch(axes[3].y, 1000) : buttons[(axes_count - 3) + 1], //ch8
-                    (axes_count > 4) ? axes_to_ch(axes[4].x, 1000) : buttons[(axes_count - 4)],     //ch9
-                    (axes_count > 4) ? axes_to_ch(axes[4].y, 1000) : buttons[(axes_count - 4) + 1], //ch10
-                    (axes_count > 5) ? axes_to_ch(axes[5].x, 1000) : buttons[(axes_count - 5)],     //ch11
-                    (axes_count > 5) ? axes_to_ch(axes[5].y, 1000) : buttons[(axes_count - 5) + 1], //ch12
-                    (axes_count > 6) ? axes_to_ch(axes[6].x, 1000) : buttons[(axes_count - 6)],     //ch13
-                    (axes_count > 6) ? axes_to_ch(axes[6].y, 1000) : buttons[(axes_count - 6) + 1], //ch14
-                    (axes_count > 7) ? axes_to_ch(axes[7].x, 1000) : buttons[(axes_count - 7)],     //ch15
-                    (axes_count > 7) ? axes_to_ch(axes[7].y, 1000) : buttons[(axes_count - 7) + 1], //ch16
-                    (axes_count > 8) ? axes_to_ch(axes[8].x, 1000) : buttons[(axes_count - 8)],     //ch17
-                    (axes_count > 8) ? axes_to_ch(axes[8].y, 1000) : buttons[(axes_count - 8) + 1]  //ch18
+                    (axes_count > 2) ? axes_to_ch(axes[2].x) : buttons[(axes_count - 2)],     //ch5
+                    (axes_count > 2) ? axes_to_ch(axes[2].y) : buttons[(axes_count - 2) + 1], //ch6
+                    (axes_count > 3) ? axes_to_ch(axes[3].x) : buttons[(axes_count - 3)],     //ch7
+                    (axes_count > 3) ? axes_to_ch(axes[3].y) : buttons[(axes_count - 3) + 1], //ch8
+                    (axes_count > 4) ? axes_to_ch(axes[4].x) : buttons[(axes_count - 4)],     //ch9
+                    (axes_count > 4) ? axes_to_ch(axes[4].y) : buttons[(axes_count - 4) + 1], //ch10
+                    (axes_count > 5) ? axes_to_ch(axes[5].x) : buttons[(axes_count - 5)],     //ch11
+                    (axes_count > 5) ? axes_to_ch(axes[5].y) : buttons[(axes_count - 5) + 1], //ch12
+                    (axes_count > 6) ? axes_to_ch(axes[6].x) : buttons[(axes_count - 6)],     //ch13
+                    (axes_count > 6) ? axes_to_ch(axes[6].y) : buttons[(axes_count - 6) + 1], //ch14
+                    (axes_count > 7) ? axes_to_ch(axes[7].x) : buttons[(axes_count - 7)],     //ch15
+                    (axes_count > 7) ? axes_to_ch(axes[7].y) : buttons[(axes_count - 7) + 1], //ch16
+                    (axes_count > 8) ? axes_to_ch(axes[8].x) : buttons[(axes_count - 8)],     //ch17
+                    (axes_count > 8) ? axes_to_ch(axes[8].y) : buttons[(axes_count - 8) + 1]  //ch18
              );
             len = mavlink_msg_to_send_buffer(buf, &msg);
             bytes_sent = sendto(out_sock, buf, len, 0, (struct sockaddr *)&sin_out, sizeof(sin_out));
             if (verbose) printf("Sent %d bytes\n", bytes_sent);
             time_check = millis();
         }
-        fflush(stdout);
-        usleep(1); //for low CPU ut
+        if (verbose) fflush(stdout);
+        nanosleep(&tw, &tr); //for low CPU ut
     } while (errsv == 11 || errsv == 38); //while not err
   } //while true
 }
