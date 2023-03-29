@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
       .sin_family = AF_INET,
   };
 
-  int buttons[6];
+  int buttons[32];
   
   //time checker
   long long time_check = millis();
