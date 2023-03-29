@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
       .sin_family = AF_INET,
   };
 
-  int buttons[9] = {1000,1000,1000,1000,1000,1000,1000,1000,1000};
+  int buttons[14] = {1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000};
   
   //time checker
   long long time_check = millis();
