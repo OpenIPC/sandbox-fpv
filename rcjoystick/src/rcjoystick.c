@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
       .sin_family = AF_INET,
   };
 
-  int buttons[6];
+  int buttons[9] = {1000,1000,1000,1000,1000,1000,1000,1000,1000};
   
   //time checker
   long long time_check = millis();
@@ -187,26 +187,27 @@ int main(int argc, char *argv[])
         }
         //send to udp
         if( (long long)time_check + send_time < millis() ){
+            uint8_t btnidx = 0;
             mavlink_msg_rc_channels_override_pack(255, 190, &msg, 0, 0,
                     axes_to_ch(axes[0].x), //ch1
                     axes_to_ch(axes[0].y), //ch2
                     axes_to_ch(axes[1].x), //ch3
                     axes_to_ch(axes[1].y), //ch4
                     
-                    (axes_count > 2) ? axes_to_ch(axes[2].x) : buttons[(axes_count - 2)],     //ch5
-                    (axes_count > 2) ? axes_to_ch(axes[2].y) : buttons[(axes_count - 2) + 1], //ch6
-                    (axes_count > 3) ? axes_to_ch(axes[3].x) : buttons[(axes_count - 3)],     //ch7
-                    (axes_count > 3) ? axes_to_ch(axes[3].y) : buttons[(axes_count - 3) + 1], //ch8
-                    (axes_count > 4) ? axes_to_ch(axes[4].x) : buttons[(axes_count - 4)],     //ch9
-                    (axes_count > 4) ? axes_to_ch(axes[4].y) : buttons[(axes_count - 4) + 1], //ch10
-                    (axes_count > 5) ? axes_to_ch(axes[5].x) : buttons[(axes_count - 5)],     //ch11
-                    (axes_count > 5) ? axes_to_ch(axes[5].y) : buttons[(axes_count - 5) + 1], //ch12
-                    (axes_count > 6) ? axes_to_ch(axes[6].x) : buttons[(axes_count - 6)],     //ch13
-                    (axes_count > 6) ? axes_to_ch(axes[6].y) : buttons[(axes_count - 6) + 1], //ch14
-                    (axes_count > 7) ? axes_to_ch(axes[7].x) : buttons[(axes_count - 7)],     //ch15
-                    (axes_count > 7) ? axes_to_ch(axes[7].y) : buttons[(axes_count - 7) + 1], //ch16
-                    (axes_count > 8) ? axes_to_ch(axes[8].x) : buttons[(axes_count - 8)],     //ch17
-                    (axes_count > 8) ? axes_to_ch(axes[8].y) : buttons[(axes_count - 8) + 1]  //ch18
+                    (axes_count > 2) ? axes_to_ch(axes[2].x) : buttons[btnidx],   //ch5
+                    (axes_count > 2) ? axes_to_ch(axes[2].y) : buttons[btnidx++], //ch6
+                    (axes_count > 3) ? axes_to_ch(axes[3].x) : buttons[btnidx++], //ch7
+                    (axes_count > 3) ? axes_to_ch(axes[3].y) : buttons[btnidx++], //ch8
+                    (axes_count > 4) ? axes_to_ch(axes[4].x) : buttons[btnidx++], //ch9
+                    (axes_count > 4) ? axes_to_ch(axes[4].y) : buttons[btnidx++], //ch10
+                    (axes_count > 5) ? axes_to_ch(axes[5].x) : buttons[btnidx++], //ch11
+                    (axes_count > 5) ? axes_to_ch(axes[5].y) : buttons[btnidx++], //ch12
+                    (axes_count > 6) ? axes_to_ch(axes[6].x) : buttons[btnidx++], //ch13
+                    (axes_count > 6) ? axes_to_ch(axes[6].y) : buttons[btnidx++], //ch14
+                    (axes_count > 7) ? axes_to_ch(axes[7].x) : buttons[btnidx++], //ch15
+                    (axes_count > 7) ? axes_to_ch(axes[7].y) : buttons[btnidx++], //ch16
+                    (axes_count > 8) ? axes_to_ch(axes[8].x) : buttons[btnidx++], //ch17
+                    (axes_count > 8) ? axes_to_ch(axes[8].y) : buttons[btnidx++]  //ch18
              );
             len = mavlink_msg_to_send_buffer(buf, &msg);
             bytes_sent = sendto(out_sock, buf, len, 0, (struct sockaddr *)&sin_out, sizeof(sin_out));
