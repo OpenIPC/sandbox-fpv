@@ -1,10 +1,10 @@
 ## USB=джойстик из обычной радиоапппаратуры с приемником SBUS на arduino pro micro
 
-![photo_2023-03-30_04-58-32.jpg](sbus-to-usb-joystick/photo_2023-03-30_04-58-32.jpg)
+![photo_2023-03-30_04-58-32.jpg](photo_2023-03-30_04-58-32.jpg)
 
 Сигнал SBUS от приемника нужен неинвертированный. Если у вас "обычный" инвертированный, вам придется использовать транзистор для инверсии.
 
-![sbus-inverter-diagram-schematics.jpg](sbus-to-usb-joystick/sbus-inverter-diagram-schematics.jpg)
+![sbus-inverter-diagram-schematics.jpg](sbus-inverter-diagram-schematics.jpg)
 
 Я использую "цифровые" транзисторы dtc144eka или bcr533 и не ставлю резистор в базу. В качестве передатчика и приемника sbus я использую qczek, вы можете использовать любой приемник.
 Его задача - передать значения каналов от аппаратуры до USB регистратора через [arduino](https://docs.arduino.cc/hardware/micro) на 32u4 ([ali](https://aliexpress.ru/item/1005003622414316.html)), которая определяется как hid-usb-joystick. При этом немного вырастает задержка за счет дополнительного
