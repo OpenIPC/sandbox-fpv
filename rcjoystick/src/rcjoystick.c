@@ -1,5 +1,6 @@
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <linux/joystick.h>
 #include <sys/socket.h>
