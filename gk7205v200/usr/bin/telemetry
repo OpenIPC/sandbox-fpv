@@ -13,9 +13,17 @@ start_telemetry() {
 	  ln -s /usr/bin/wfb_tx /usr/bin/telemetry_tx ; chmod +x /usr/bin/telemetry_tx
   else
 	if [ ${one_way} = "false" ]; then
-	  telemetry_rx -r ${stream_rx} -u ${port_rx} -K ${keydir}/drone.key ${wlan} >/dev/null &
+    if [ -z "${link_id}" ]; then
+      telemetry_rx -r ${stream_rx} -u ${port_rx} -K ${keydir}/drone.key ${wlan} >/dev/null &
+    else
+      telemetry_rx -p ${stream_rx} -u ${port_rx} -K ${keydir}/drone.key -i ${link_id} ${wlan} >/dev/null &
+    fi
 	fi
-	telemetry_tx -r ${stream_tx} -u ${port_tx} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -p ${fec_p} ${wlan} >/dev/null &
+    if [ -z "${link_id}" ]; then
+      telemetry_tx -r ${stream_tx} -u ${port_tx} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -p ${fec_p} ${wlan} >/dev/null &
+     else
+      telemetry_tx -p ${stream_tx} -u ${port_tx} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -n ${fec_n} -T ${fec_timeout} -i ${link_id} ${wlan} >/dev/null &
+    fi
   fi
 }
 
