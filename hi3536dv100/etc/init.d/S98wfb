@@ -24,7 +24,7 @@ detect_wifi_card() {
 		#modprobe 88XXau rtw_tx_pwr_idx_override=${driver_txpower_override}
 		insmod /lib/modules/4.9.37/extra/88XXau.ko rtw_tx_pwr_idx_override=${driver_txpower_override}
 	  ;;
-	  "0cf3:9271")
+	  "0cf3:9271" | "040d:3801")
 		driver="atheros"
 		modprobe mac80211
 		modprobe ath9k_htc
@@ -81,7 +81,11 @@ load_interface() {
 start_wfb() {
   #forward to PC
   if [ ! -z "${udp_addr}" ]; then
+    if [ -z "${link_id}" ]; then
       wfb_rx -c ${udp_addr} -u ${udp_port} -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &
+    else
+      wfb_rx -c ${udp_addr} -u ${udp_port} -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
+    fi
   fi
   #use tablet as usb-modem
   PHONE_IP=`ip route show 0.0.0.0/0 dev usb0 | cut -d\  -f3`
@@ -89,7 +93,11 @@ start_wfb() {
       echo found usb0 device
       
       echo ${PHONE_IP}
-      wfb_rx -c ${PHONE_IP} -u 5600 -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &  
+      if [ -z "${link_id}" ]; then
+        wfb_rx -c ${PHONE_IP} -u 5600 -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &  
+      else
+        wfb_rx -c ${PHONE_IP} -u 5600 -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
+      fi
   fi
   #use tablet as wifi-ap
   if [ ! -z ${tab_wlan} ]; then
@@ -98,13 +106,21 @@ start_wfb() {
     TAB_IP=`ip route show 0.0.0.0/0 dev ${tab_wlan} | cut -d\  -f3`
     if [ ! -z ${TAB_IP} ]; then
         echo found ${tab_wlan} ap ${TAB_IP}
-        wfb_rx -c ${TAB_IP} -u 5600 -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &  
+        if [ -z "${link_id}" ]; then
+          wfb_rx -c ${TAB_IP} -u 5600 -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &
+        else
+          wfb_rx -c ${TAB_IP} -u 5600 -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
+        fi
     fi
   fi
   #use hdmi
   if [ ${use_hdmi} = "true" ]; then
       /root/vdec &
-      wfb_rx -c 127.0.0.1 -u 5000 -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &
+      if [ -z "${link_id}" ]; then
+        wfb_rx -c 127.0.0.1 -u 5000 -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &
+      else
+        wfb_rx -c 127.0.0.1 -u 5000 -p ${stream} -K ${keydir}/gs.key -i ${link_id} ${wlan} >/dev/null &
+      fi
   fi
 }
 
