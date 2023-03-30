@@ -27,7 +27,7 @@ const int default_baudrate = 115200;
 const char *defualt_out_addr = "127.0.0.1:14600";
 const char *default_in_addr = "127.0.0.1:14601";
 
-static uint8_t ch_count = 0;
+uint8_t ch_count = 0;
 uint16_t ch[14];
 
 struct bufferevent *serial_bev;
@@ -366,7 +366,7 @@ int main(int argc, char **argv)
 		{ "baudrate", required_argument, NULL, 'b' },
 		{ "out", required_argument, NULL, 'o' },
 		{ "in", required_argument, NULL, 'i' },
-		{ "channels", no_argument, NULL, 'c' },
+		{ "channels", required_argument, NULL, 'c' },
 		{ "verbose", no_argument, NULL, 'v' },
 		{ "help", no_argument, NULL, 'h' },
 		{ NULL, 0, NULL, 0 }
@@ -396,6 +396,8 @@ int main(int argc, char **argv)
 			break;
 		case 'c':
 			ch_count = atoi(optarg);
+			if(ch_count == 0) printf("rc_channels_override monitoring disabled\n");
+			else printf("rc_channels_override monitoring %d channels after first 4\n", ch_count);
 			break;
 		case 'v':
 			verbose = true;
