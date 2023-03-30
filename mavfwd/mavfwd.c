@@ -25,7 +25,8 @@ const int default_baudrate = 115200;
 const char *defualt_out_addr = "127.0.0.1:14600";
 const char *default_in_addr = "127.0.0.1:14601";
 
-uint16_t ch[10];
+static uint8_t ch_count = 4;
+uint16_t ch[14];
 
 struct bufferevent *serial_bev;
 struct sockaddr_in sin_out = {
@@ -116,30 +117,39 @@ static void signal_cb(evutil_socket_t fd, short event, void *arg)
 
 static void dump_mavlink_packet(unsigned char *data, const char *direction)
 {
-	uint8_t seq = data[2];
-	uint8_t sys_id = data[3];
-	uint8_t comp_id = data[4];
-	uint8_t msg_id = data[5];
+  uint8_t seq;
+  uint8_t sys_id;
+  uint8_t comp_id;
+  uint32_t msg_id;
 
-	printf("%s sender %d/%d\t%d\t%d\n", direction, sys_id, comp_id, seq,
+  if(data[0] == 0xFE) { //mavlink 1
+      seq = data[2];
+      sys_id = data[3];
+      comp_id = data[4];
+      msg_id = data[5];
+  } else { //mavlink 2
+      seq = data[4];
+      sys_id = data[5];
+      comp_id = data[6];
+      msg_id = data[7];
+  }
+
+	printf("%s %#02x sender %d/%d\t%d\t%d\n", direction, data[0], sys_id, comp_id, seq,
 	       msg_id);
-	
-	//RC_CHANNELS_OVERRIDE ( #70 ) hook //or RC_CHANNELS #65
+
+	//RC_CHANNELS ( #65 ) hook
 	if(msg_id == 70) {
-    uint8_t offset = 15;
-    for(uint8_t i=0; i < sizeof(ch); i++) {
-        //we do not check channels other than those indicated
-        if(i != 4 && i != 5 && i != 6 && i != 7) continue;
-        uint16_t val = data[offset+1] | (data[offset] << 8);
-        if(ch[i] != val) {
-            ch[i] = val;
-            //printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ch %d val %d \n", i+1, val);
-            char buff[30];
-            sprintf(buff, "/root/channels.sh %d %d", i+1, val);
-            system(buff);
-         }
-        offset = offset + 2;
-	  }
+      uint8_t offset = 19; //15 = 1ch;
+      for(uint8_t i=0; i < ch_count; i++) {
+          uint16_t val = data[offset+1] | (data[offset] << 8);
+          if(ch[i] != val) {
+              ch[i] = val;
+              char buff[44];
+              sprintf(buff, "/root/channels.sh %d %d &", i+5, val);
+              system(buff);
+           }
+      offset = offset + 2;
+	    } //for
 	} //msg_id
 }
 
@@ -157,10 +167,13 @@ static bool get_mavlink_packet(unsigned char *in_buffer, int buf_len,
 	if (buf_len < 6 /* header */) {
 		return false;
 	}
-	assert(in_buffer[0] == 0xFE);
+	assert(in_buffer[0] == 0xFE || in_buffer[0] == 0xFD); //mavlink 1 or 2
 
 	uint8_t msg_len = in_buffer[1];
-	*packet_len = 6 /* header */ + msg_len + 2 /* crc */;
+	if (in_buffer[0] == 0xFE)
+    *packet_len = 6 /* header */ + msg_len + 2 /* crc */; //mavlink 1
+  else
+    *packet_len = 10 /* header */ + msg_len + 2 /* crc */; //mavlink 2
 	if (buf_len < *packet_len)
 		return false;
 
@@ -173,7 +186,7 @@ static bool get_mavlink_packet(unsigned char *in_buffer, int buf_len,
 static size_t until_first_fe(unsigned char *data, size_t len)
 {
 	for (size_t i = 1; i < len; i++) {
-		if (data[i] == 0xFE) {
+		if (data[i] == 0xFE || data[i] == 0xFD) {
 			return i;
 		}
 	}
@@ -193,7 +206,7 @@ static void serial_read_cb(struct bufferevent *bev, void *arg)
 		}
 
 		// find first 0xFE and skip everything before it
-		if (*data != 0xFE) {
+		if (*data != 0xFE && *data != 0xFD) {
 			int bad_len = until_first_fe(data, in_len);
 			printf(">> Skipping %d bytes of unknown data\n",
 			       bad_len);
@@ -205,6 +218,14 @@ static void serial_read_cb(struct bufferevent *bev, void *arg)
 			return;
 
 		// TODO: check CRC correctness and skip bad packets
+
+    /*if(data[5] == 65) { //rc_channels test
+      uint8_t rssi_ch = 6;
+      uint16_t rssi = 1898;
+      data[16 + rssi_ch * 2] = (uint8_t)((rssi & 0xFF00) >> 8);
+      data[15 + rssi_ch * 2] = (uint8_t)(rssi & 0x00FF);
+    }*/
+
 
 		if (sendto(out_sock, data, packet_len, 0,
 			   (struct sockaddr *)&sin_out,
