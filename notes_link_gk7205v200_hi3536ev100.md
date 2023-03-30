@@ -22,7 +22,7 @@ Andrey Bezborodov из команды OpenIPC предоставил на тес
 
 Этот вопрос можно решить, "научив" `vdec` распознавать RTP/h26[4-5] с помощью библиотеки *libavformat/avformat.h* и по прежнему "стримить" на камере через `majestic`. Для этого нужна помощь программиста C++, если вы желаете помочь проекту с этим - [обращайтесь](https://t.me/+BMyMoolVOpkzNWUy).
 
-Пример настройки *GStreamer* на Mission Planner для воспроизведения h265: `udpsrc port=5600 buffer-size=90000 ! application/x-rtp ! rtph265depay ! avdec_h265 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink`
+Пример настройки *GStreamer* на Mission Planner для воспроизведения h265: `udpsrc port=5600 buffer-size=32768 ! application/x-rtp ! rtph265depay ! avdec_h265 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink`
 
 Поддерживаются частоты от 5,2ghz до 5,85ghz.
 
