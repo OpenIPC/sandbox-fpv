@@ -27,7 +27,7 @@ const int default_baudrate = 115200;
 const char *defualt_out_addr = "127.0.0.1:14600";
 const char *default_in_addr = "127.0.0.1:14601";
 
-static uint8_t ch_count = 4;
+static uint8_t ch_count = 0;
 uint16_t ch[14];
 
 struct bufferevent *serial_bev;
@@ -44,6 +44,8 @@ static void print_usage()
 	       "  --baudrate      Serial port baudrate (%d by default)\n"
 	       "  --out           Remote output port (%s by default)\n"
 	       "  --in            Remote input port (%s by default)\n"
+	       "  --channels      RC override channels to parse after first 4 and call /root/channels.sh $ch $val, default 0\n"
+	       "  --verbose       display each packet, default not\n"	       
 	       "  --help          Display this help\n",
 	       default_master, default_baudrate, defualt_out_addr,
 	       default_in_addr);
@@ -139,7 +141,7 @@ static void dump_mavlink_packet(unsigned char *data, const char *direction)
 	if (verbose) printf("%s %#02x sender %d/%d\t%d\t%d\n", direction, data[0], sys_id, comp_id, seq, msg_id);
 
 	//RC_CHANNELS_OVERRIDE ( #70 ) hook
-	if(msg_id == 70) {
+	if(msg_id == 70 && ch_count > 0) {
       uint8_t offset = 19; //15 = 1ch;
       for(uint8_t i=0; i < ch_count; i++) {
           uint16_t val = data[offset+1] | (data[offset] << 8);
@@ -364,6 +366,7 @@ int main(int argc, char **argv)
 		{ "baudrate", required_argument, NULL, 'b' },
 		{ "out", required_argument, NULL, 'o' },
 		{ "in", required_argument, NULL, 'i' },
+		{ "channels", no_argument, NULL, 'c' },
 		{ "verbose", no_argument, NULL, 'v' },
 		{ "help", no_argument, NULL, 'h' },
 		{ NULL, 0, NULL, 0 }
@@ -390,6 +393,9 @@ int main(int argc, char **argv)
 			break;
 		case 'i':
 			in_addr = optarg;
+			break;
+		case 'c':
+			ch_count = atoi(optarg);
 			break;
 		case 'v':
 			verbose = true;
