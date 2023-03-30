@@ -137,7 +137,7 @@ static void dump_mavlink_packet(unsigned char *data, const char *direction)
 	printf("%s %#02x sender %d/%d\t%d\t%d\n", direction, data[0], sys_id, comp_id, seq,
 	       msg_id);
 
-	//RC_CHANNELS ( #65 ) hook
+	//RC_CHANNELS_OVERRIDE ( #70 ) hook
 	if(msg_id == 70) {
       uint8_t offset = 19; //15 = 1ch;
       for(uint8_t i=0; i < ch_count; i++) {
