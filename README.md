@@ -14,7 +14,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Управление кнопками с front panel на регистраторе](nvr_gpio.md)
 * [Подключение планшета к регистратору по wifi через AP планшета](note-nvr-tab-ap.md)
 * [Использование аппаратуры как джойстика для передачи каналов RC через mavlink](rcjoystick.md)
-* [SBUS-to-USB joystick] для использования любой аппаратуры с sbus приемником с регистратором(sbus-to-usb-joystick)
+* [SBUS-to-USB joystick для использования любой аппаратуры с sbus приемником с регистратором](sbus-to-usb-joystick)
 
 #### Разное
 * [mavfwd для inav (односторонний msp) для камеры](user_TipoMan/mavfwd_mavlink2.tar?raw=true)
