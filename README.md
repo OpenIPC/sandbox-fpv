@@ -6,14 +6,14 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Заметки о настройке линка на камере gk7205v200 и регистраторе hi3536ev100 (dv100)](notes_link_gk7205v200_hi3536ev100.md)
 * [Заметки о прошивке камеры gk7205v200 на OpenIPC](notes_start_ivg-g2s.md)
 * [Заметки о прошивке регистратора hi3536ev100 на OpenIPC](notes_start_hi3536ev100.md)
-* [Установка usb_modeswitch на камеру с прошивкой fpv, lite](usb-modeswitch.md)
 * [Заметка о управлении камерой через RC каналы с наземки](notes_cam_control.md)
 * [Загрузчик под телеметрию для gk7502v200, который не вешает камеру при ребуте](gk7205v200_u-boot-7502v200-for-telemetry.md)
-* [Подключение и настройка планшета или смартфона для видео и OSD по USB](usb-tethering.md)
 * [Управление кнопками с front panel на регистраторе](nvr_gpio.md)
+* [Подключение и настройка планшета или смартфона для видео и OSD по USB](usb-tethering.md)
 * [Подключение планшета к регистратору по wifi через AP планшета](note-nvr-tab-ap.md)
 * [Использование аппаратуры как джойстика для передачи каналов RC через mavlink](rcjoystick.md)
 * [SBUS-to-USB joystick для использования любой аппаратуры с sbus приемником](sbus-to-usb-joystick)
+* [Установка usb_modeswitch на камеру с прошивкой fpv, lite](usb-modeswitch.md)
 
 #### Разное
 * [mavfwd для inav (односторонний msp) для камеры](user_TipoMan/mavfwd_mavlink2.tar?raw=true)
