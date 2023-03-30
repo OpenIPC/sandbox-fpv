@@ -20,6 +20,8 @@
 
 #define MAX_MTU 9000
 
+bool verbose = false;
+
 const char *default_master = "/dev/ttyAMA0";
 const int default_baudrate = 115200;
 const char *defualt_out_addr = "127.0.0.1:14600";
@@ -134,8 +136,7 @@ static void dump_mavlink_packet(unsigned char *data, const char *direction)
       msg_id = data[7];
   }
 
-	printf("%s %#02x sender %d/%d\t%d\t%d\n", direction, data[0], sys_id, comp_id, seq,
-	       msg_id);
+	if (verbose) printf("%s %#02x sender %d/%d\t%d\t%d\n", direction, data[0], sys_id, comp_id, seq, msg_id);
 
 	//RC_CHANNELS_OVERRIDE ( #70 ) hook
 	if(msg_id == 70) {
@@ -208,7 +209,7 @@ static void serial_read_cb(struct bufferevent *bev, void *arg)
 		// find first 0xFE and skip everything before it
 		if (*data != 0xFE && *data != 0xFD) {
 			int bad_len = until_first_fe(data, in_len);
-			printf(">> Skipping %d bytes of unknown data\n",
+			if (verbose) printf(">> Skipping %d bytes of unknown data\n",
 			       bad_len);
 			evbuffer_drain(input, bad_len);
 			continue;
@@ -218,14 +219,6 @@ static void serial_read_cb(struct bufferevent *bev, void *arg)
 			return;
 
 		// TODO: check CRC correctness and skip bad packets
-
-    /*if(data[5] == 65) { //rc_channels test
-      uint8_t rssi_ch = 6;
-      uint16_t rssi = 1898;
-      data[16 + rssi_ch * 2] = (uint8_t)((rssi & 0xFF00) >> 8);
-      data[15 + rssi_ch * 2] = (uint8_t)(rssi & 0x00FF);
-    }*/
-
 
 		if (sendto(out_sock, data, packet_len, 0,
 			   (struct sockaddr *)&sin_out,
@@ -371,6 +364,7 @@ int main(int argc, char **argv)
 		{ "baudrate", required_argument, NULL, 'b' },
 		{ "out", required_argument, NULL, 'o' },
 		{ "in", required_argument, NULL, 'i' },
+		{ "verbose", no_argument, NULL, 'v' },
 		{ "help", no_argument, NULL, 'h' },
 		{ NULL, 0, NULL, 0 }
 	};
@@ -396,6 +390,9 @@ int main(int argc, char **argv)
 			break;
 		case 'i':
 			in_addr = optarg;
+			break;
+		case 'v':
+			verbose = true;
 			break;
 		case 'h':
 		default:
