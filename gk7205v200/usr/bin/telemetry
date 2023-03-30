@@ -36,7 +36,7 @@ case "$1" in
 	  /usr/bin/mavlink-routerd &
 	else
     echo "Using mavfwd"
-	  mavfwd --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} >/dev/null &
+	  mavfwd -c 4 --master ${serial} --baudrate ${baud} --out 127.0.0.1:${port_tx} --in 127.0.0.1:${port_rx} >/dev/null &
 	fi
 
 	start_telemetry
