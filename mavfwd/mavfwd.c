@@ -139,17 +139,20 @@ static void dump_mavlink_packet(unsigned char *data, const char *direction)
   }
 
 	if (verbose) printf("%s %#02x sender %d/%d\t%d\t%d\n", direction, data[0], sys_id, comp_id, seq, msg_id);
-
-	//RC_CHANNELS_OVERRIDE ( #70 ) hook
-	if(msg_id == 70 && ch_count > 0) {
-      uint8_t offset = 19; //15 = 1ch;
+  
+  uint16_t val;
+  
+	//RC_CHANNELS ( #65 ) hook
+	if(msg_id == 65 && ch_count > 0) {
+      uint8_t offset = 18; //15 = 1ch;
       for(uint8_t i=0; i < ch_count; i++) {
-          uint16_t val = data[offset+1] | (data[offset] << 8);
+          val = data[offset] | (data[offset+1] << 8);
           if(ch[i] != val) {
               ch[i] = val;
               char buff[44];
               sprintf(buff, "/root/channels.sh %d %d &", i+5, val);
               system(buff);
+              if (verbose) printf("called /root/channels.sh %d %d\n", i+5, val);
            }
       offset = offset + 2;
 	    } //for
