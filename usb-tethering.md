@@ -1,7 +1,6 @@
-## Подключение смартфона или планшета на android для FPV-VR и прочих программ GS к NVR.
+## Подключение смартфона или планшета на android для FPV-VR и прочих программ GS к NVR по usb
 
-USB Tethering, он же USB Ethernet - функция ОС Android для использования телефона в качестве USB-модема, представляющегося сетевой картой. Нам это дает возможность соединить
-телефон и NVR обычным usb-проводом и получить между ними быструю сеть.
+USB Tethering, он же USB Ethernet - функция ОС Android для использования телефона в качестве USB-модема, представляющегося сетевой картой. Нам это дает возможность соединить телефон и NVR обычным usb-проводом и получить между ними быструю сеть. К сожалению, в большинстве случаев usb terhering доступен только на планшетах с модулем sim-карты. Если у вас его нет, и usb-модем не активируется, придется пдключаться по usb-ethernet или [wifi](note-nvr-tab-ap.md).
 
 Нужно [установить](notes_start_hi3536ev100.md#L47) [ядро](hi3536dv100/uImage.hi3536dv100) и [rootfs](hi3536dv100/rootfs.squashfs.hi3536dv100) с поддержкой rndis_host и залить [`/usr/bin/wifibroadcast`](hi3536dv100/usr/bin/wifibroadcast), [`/usr/bin/telemetry`](hi3536dv100/usr/bin/telemetry), и добавить в [`interfaces`](hi3536dv100/etc/network/interfaces) следующее:
 ```
