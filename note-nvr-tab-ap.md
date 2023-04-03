@@ -19,7 +19,7 @@
           post-down killall wpa_supplicant
 ```
 ### Поправим конфиги сервисы
-* Закачаем обновленные [`S98wfb`](hi3536dv100/etc/init.d/S98wfb) и [`telemetry`](hi3536dv100/usr/bin/telemetry) с детектированием подключения в /etc/init.d и /usr/bin.
+* Закачаем обновленные [`/usr/bin/wifibroadcast`](hi3536dv100/usr/bin/wifibroadcast) и [`/usr/bin/telemetry`](hi3536dv100/usr/bin/telemetry) с детектированием подключения в /usr/bin.
 * Добавим в [wfb.conf](hi3536dv100/etc/wfb.conf) новую строчку с параметром - наименованием интерфейса для ap
 ```
 tab_wlan=wlan1
