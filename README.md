@@ -1,7 +1,9 @@
 # sandbox-fpv
 Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | [link](https://t.me/+BMyMoolVOpkzNWUy)
 
-В связи с некоторыми обстоятельствами, wfb-ng был заменен в моих камере и регистраторе на альтернативу от OpenHD. [В архиве](wfbopenhd.zip) пакет для сборки в buildroot OpenIPC. В шелл-обертках учтены оба варианта, по наличию параметра `link_id`, [архив](https://github.com/OpenIPC/sandbox-fpv/blob/master/wfb.zip) с бинарниками обоих вариантов.
+* 04.04.2023 - В OpenIPC "допилили" стример majestic, теперь на камере ivg-g2s работает h265 cbr (постоянный битрейт). Это дало более чистую картинку и значительное уменьшение шума. Вместе с этим были внесены изменения в процесс запуска линка. Основным сервисом теперь является `S98datalink` с конфигом `/etc/datalink.conf`, а запуск wfb теперь производится через `/usr/bin/wifibroadcast`. Статьи были исправлены под это нововведение.
+
+* 01.04.2023 - В связи с некоторыми обстоятельствами, wfb-ng был заменен в моих камере и регистраторе на альтернативу от OpenHD. [В архиве](wfbopenhd.zip) пакет для сборки в buildroot OpenIPC. В шелл-обертках учтены оба варианта, по наличию параметра `link_id`, [архив](https://github.com/OpenIPC/sandbox-fpv/blob/master/wfb.zip) с бинарниками обоих вариантов.
 
 * [Заметки о настройке линка на камере gk7205v200 и регистраторе hi3536ev100 (dv100)](notes_link_gk7205v200_hi3536ev100.md)
 * [Заметки о прошивке камеры gk7205v200 на OpenIPC](notes_start_ivg-g2s.md)
