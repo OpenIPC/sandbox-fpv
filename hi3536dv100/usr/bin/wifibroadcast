@@ -6,7 +6,6 @@
 . /etc/datalink.conf
 . /etc/wfb.conf
 
-eval `cat /etc/wfb.conf | grep tab_wlan`
 keydir="/etc"
 chip=$(ipcinfo -c)
 
@@ -86,6 +85,11 @@ load_interface() {
 start_wfb() {
   #forward to PC
   if [ ! -z "${udp_addr}" ]; then
+    if [ ${udp_addr} = "auto" ]; then
+      ifdown eth0
+      ifup eth0
+      udp_addr=`ip route show 0.0.0.0/0 dev eth0 | cut -d\  -f3`
+    fi
     if [ -z "${link_id}" ]; then
       wfb_rx -c ${udp_addr} -u ${udp_port} -r ${stream} -K ${keydir}/gs.key ${wlan} >/dev/null &
     else
