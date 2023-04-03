@@ -44,4 +44,4 @@ printenv #смотрим, все ли в порядке
 
 Далее залейте конфиги и исполняемые файлы через winscp ([etc / usr](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100)) и перезагрузите регистратор.
 
-В дальнейшем прошивку регистратора можно делать, залив в него через WinSCP ядро и rootfs в каталог `/tmp` и выполнив `sysupgrade --kernel=/tmp/uImage.hi3536dv100 --rootfs=/tmp/rootfs.squashfs.hi3536dv100`.
+В дальнейшем прошивку регистратора можно делать, залив в него через WinSCP ядро и rootfs в каталог `/tmp` и выполнив `sysupgrade --kernel=/tmp/uImage.hi3536dv100 --rootfs=/tmp/rootfs.squashfs.hi3536dv100 -z`. Параметр `-z` нужен если у вас нет подключения к интернету (не обновляет скрипт sysupgrade), `-n` очистит пользовательскую fs (overlay).
