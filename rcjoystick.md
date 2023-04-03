@@ -19,7 +19,7 @@ Usage:
 
 ### Запускаем
 Нам необходимо ядро и rootfs с поддержкой usb-hid. Для этого [прошейте](notes_start_hi3536ev100) их из [`/hi3536dv100`](hi3536dv100) каталога.
-Необходимо обеспечить запуск модуля `hid-generic.ko`, для этого добавьте `modprobe hid-generic.ko` в [`S95hisilicon`](hi3536dv100/etc/init.d/S95hisilicon).
+~~Необходимо обеспечить запуск модуля `hid-generic.ko`, для этого добавьте `modprobe hid-generic.ko` в [`S95hisilicon`](hi3536dv100/etc/init.d/S95hisilicon).~~ В свежесобранном ядре модуль `hid-generic.ko` загружается автоматически.
 
 Далее нужно скопировать бинарник [`rcjoystick`](hi3536dv100/usr/bin/rcjoystick) в /usr/bin регистратора, через WinSCP и назначить права на исполнение: `chmod +x /usr/bin/rcjoystick`.
 Перезагружаемся, подключаем аппаратуру к регистратору по usb и пробуем в консоли запустить `rcjoystick -v`. Если все прошло хорошо, то на экране мы должны увидеть значения осей при изменении положения стиков и переключателей, а в программе телеметрии, например в QGC (analyse tools > Mavlink inspector > RC_CHANNELS_RAW) должны изменяться каналы. Для запуска на постоянную можно прописать его например в S95hisilicon как `/usr/bin/rcjoystick -t 25 &`.
