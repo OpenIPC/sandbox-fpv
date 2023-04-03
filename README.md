@@ -24,7 +24,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Отображение видео на windows и в MP](gstlaunch_on_windows.md)
 * [Отключение watchdog на регистраторе hi3536dv100](note_nvr_wdt.md)
 
-### Дорожная карта
+## Дорожная карта
 * ~~Запуск видео с передачей с регистратора на пк.~~
 * ~~Запуск одно-и двусторонней телеметрии.~~
 * ~~Запуск передачи видео через usb tethering на android-планшет.~~
