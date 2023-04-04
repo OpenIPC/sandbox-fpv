@@ -15,6 +15,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Управление кнопками с front panel на регистраторе](nvr_gpio.md)
 * [Подключение и настройка планшета или смартфона для видео и OSD по USB](usb-tethering.md)
 * [Подключение планшета к регистратору по wifi через AP планшета](note-nvr-tab-ap.md)
+* [Подключение планшета к регистратору через ethernet-usb-device](usb-eth-modem.md)
 * [Использование аппаратуры как джойстика для передачи каналов RC через mavlink](rcjoystick.md)
 * [SBUS-to-USB joystick для использования любой аппаратуры с sbus приемником](sbus-to-usb-joystick)
 * [Установка usb_modeswitch на камеру с прошивкой fpv, lite](usb-modeswitch.md)
