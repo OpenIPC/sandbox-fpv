@@ -24,7 +24,7 @@ detect_wifi_card() {
 		driver="realtek"
 		modprobe 88XXau rtw_tx_pwr_idx_override=${driver_txpower_override}
 	  ;;
-	  "0cf3:9271")
+	  "0cf3:9271" | "040d:3801")
 		driver="atheros"
 		modprobe mac80211
 		modprobe ath9k_htc
@@ -74,7 +74,7 @@ load_interface() {
   fi
 
   iw reg set ${region}
-  if [ -z "${freq}" ]; then
+  if [ ! -z "${freq}" ]; then
     iwconfig ${wlan} freq ${freq}
   else
     iwconfig ${wlan} channel ${channel}
@@ -84,22 +84,18 @@ load_interface() {
 
 start_wfb() {
   if [ -z "${link_id}" ]; then
-    wfb_tx -r ${stream} -u ${udp_port} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -p ${fec_p} ${wlan} &
+    wfb_tx -r ${stream} -u ${udp_port} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -p ${fec_p} ${wlan} >/dev/null &
   else
-    wfb_tx -p ${stream} -u ${udp_port} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -n ${fec_n} -T ${fec_timeout} -i ${link_id} ${wlan} &
+    wfb_tx -p ${stream} -u ${udp_port} -K ${keydir}/drone.key -B ${bandwidth} -M ${mcs_index} -S ${stbc} -L ${ldpc} -G ${guard_interval} -k ${fec_k} -n ${fec_n} -T ${fec_timeout} -i ${link_id} ${wlan} >/dev/null &
   fi
 }
 
-case "$1" in
-  start)
-    if [ ${daemon} -eq 1 ]; then
+start_all() {
+  if [ ${daemon} -eq 1 ]; then
 
 	  echo "Loading modules and wifi card driver..."
-
 	  load_modules
-
 	  echo "Preparing interface wlan..."
-	  
 	  load_interface
 	  
 	  if ! cat ${keydir}/drone.key > /dev/null 2>&1; then
@@ -110,32 +106,42 @@ case "$1" in
 	  fi
 
 	  echo "Starting Wifibroadcast service..."
-	  
 	  start_wfb
-
 	  echo "Done."
 
 	  if [ ${telemetry} = "true" ]; then
-		if [ ${chip} = "gk7205v200" ]; then
-			# UART2_RX mux
-			devmem 0x120c0010 32 0x1e04
-		fi
+      if [ ${chip} = "gk7205v200" ]; then
+        # UART2_RX mux
+        devmem 0x120c0010 32 0x1e04
+      fi
 		/usr/bin/telemetry start
 	  fi
-
 	else
       echo "Wifibroadcast service disabled in wfb.conf..."
 	fi
+}
+
+stop_all() {
+    echo "Stopping all services..."
+    kill -9 $(pidof wfb_tx)
+    kill -9 $(pidof telemetry_rx)
+    kill -9 $(pidof telemetry_tx)
+    kill -9 $(pidof mavlink-routerd)
+    kill -9 $(pidof mavfwd)
+}
+
+case "$1" in
+  start)
+    start_all
     ;;
   stop)
-    echo "Stopping all services..."
-	kill -9 $(pidof wfb_tx)
-	kill -9 $(pidof telemetry_rx)
-	kill -9 $(pidof telemetry_tx)
-	kill -9 $(pidof mavlink-routerd)
-	kill -9 $(pidof mavfwd)
+    stop_all
     ;;
-    *)
-    echo "Usage: $0 {start|stop}"
+  restart)
+    stop_all
+    start_all
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
     exit 1
 esac
