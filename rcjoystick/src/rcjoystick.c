@@ -121,8 +121,13 @@ int main(int argc, char *argv[])
   device = "/dev/input/js0";
   inet_aton("127.0.0.1", &sin_out.sin_addr);
   sin_out.sin_port = htons(14650);
+  //rssi func
+  int8_t chan_rxpkts = 0; //default disabled
+  int16_t rxpkts_prev = 0, rxpkts = 0, rxpkts_per_second = 0;
+  long long rxpkts_time = millis();
   
-  while ((opt = getopt(argc, argv, "vd:a:p:t:x:h")) != -1) {
+  
+  while ((opt = getopt(argc, argv, "vd:a:p:t:x:r:h")) != -1) {
         switch (opt) {
         case 'v':
             verbose = true;
@@ -141,6 +146,9 @@ int main(int argc, char *argv[])
             break;
         case 'x':
             axes_count = atoi(optarg);
+            break;
+        case 'r':
+            chan_rxpkts = atoi(optarg);
             break;
         case 'h':
             printf("rcjoystick by whoim@mail.ru\ncapture usb-hid joystic state and share to mavlink reciever as RC_CHANNELS_OVERRIDE packets\nUsage:\n [-v] verbose;\n [-d device] default '/dev/input/js0';\n [-a addr] ip address send to, default 127.0.0.1;\n [-p port] udp port send to, default 14650;\n [-t time] update RC_CHANNEL_OVERRIDE time in ms, default 50;\n [-x axes_count] 2..9 axes, default 5, other channels mapping to js buttons from button 0;\n");
@@ -164,8 +172,11 @@ int main(int argc, char *argv[])
     printf("Update time: %dms\n", send_time);
     printf("UDP: %s:%d\n", inet_ntoa(sin_out.sin_addr), ntohs(sin_out.sin_port));
     printf("Used axes: %d, other channels as buttons\n", axes_count);
+    if(chan_rxpkts > 0) printf("Store rxpkts to channel %d\n", chan_rxpkts);
     printf("Started\n");
     
+    
+
     do //while not errno read js
     {
      errsv = 11; //reset
@@ -186,6 +197,22 @@ int main(int argc, char *argv[])
                     break;
             }
         }
+        //check rxpkts
+        if(chan_rxpkts > 4) {
+          if( (long long)rxpkts_time + 1000 < millis() ){
+              FILE* rxpkts_ptr = fopen("/sys/class/net/wlan0/statistics/rx_packets", "r");
+              if (rxpkts_ptr == NULL) {
+                  printf("error open net statistics");
+                  //return 0;
+              }
+              fscanf(rxpkts_ptr, "%hd", &rxpkts);
+              fclose(rxpkts_ptr);
+              rxpkts_per_second = rxpkts - rxpkts_prev;
+              rxpkts_time = millis();
+              rxpkts_prev = rxpkts;
+              if (verbose) printf("current rx per sec is %d \n", rxpkts_per_second);
+          }
+        }
         //send to udp
         if( (long long)time_check + send_time < millis() ){
             uint8_t btnidx = 0;
@@ -195,20 +222,21 @@ int main(int argc, char *argv[])
                     axes_to_ch(axes[1].x), //ch3
                     axes_to_ch(axes[1].y), //ch4
                     
-                    (axes_count > 2) ? axes_to_ch(axes[2].x) : buttons[btnidx],   //ch5
-                    (axes_count > 2) ? axes_to_ch(axes[2].y) : buttons[btnidx++], //ch6
-                    (axes_count > 3) ? axes_to_ch(axes[3].x) : buttons[btnidx++], //ch7
-                    (axes_count > 3) ? axes_to_ch(axes[3].y) : buttons[btnidx++], //ch8
-                    (axes_count > 4) ? axes_to_ch(axes[4].x) : buttons[btnidx++], //ch9
-                    (axes_count > 4) ? axes_to_ch(axes[4].y) : buttons[btnidx++], //ch10
-                    (axes_count > 5) ? axes_to_ch(axes[5].x) : buttons[btnidx++], //ch11
-                    (axes_count > 5) ? axes_to_ch(axes[5].y) : buttons[btnidx++], //ch12
-                    (axes_count > 6) ? axes_to_ch(axes[6].x) : buttons[btnidx++], //ch13
-                    (axes_count > 6) ? axes_to_ch(axes[6].y) : buttons[btnidx++], //ch14
-                    (axes_count > 7) ? axes_to_ch(axes[7].x) : buttons[btnidx++], //ch15
-                    (axes_count > 7) ? axes_to_ch(axes[7].y) : buttons[btnidx++], //ch16
-                    (axes_count > 8) ? axes_to_ch(axes[8].x) : buttons[btnidx++], //ch17
-                    (axes_count > 8) ? axes_to_ch(axes[8].y) : buttons[btnidx++]  //ch18
+                    (chan_rxpkts == 5) ? rxpkts_per_second : (axes_count > 2) ? axes_to_ch(axes[2].x) : buttons[btnidx],   //ch5
+                    (chan_rxpkts == 6) ? rxpkts_per_second : (axes_count > 2) ? axes_to_ch(axes[2].y) : buttons[btnidx++], //ch6
+                    (chan_rxpkts == 7) ? rxpkts_per_second : (axes_count > 3) ? axes_to_ch(axes[3].x) : buttons[btnidx++], //ch7
+                    (chan_rxpkts == 8) ? rxpkts_per_second : (axes_count > 3) ? axes_to_ch(axes[3].y) : buttons[btnidx++], //ch8
+                    (chan_rxpkts == 9) ? rxpkts_per_second : (axes_count > 4) ? axes_to_ch(axes[4].x) : buttons[btnidx++], //ch9
+                    (chan_rxpkts == 10) ? rxpkts_per_second : (axes_count > 4) ? axes_to_ch(axes[4].y) : buttons[btnidx++], //ch10
+                    (chan_rxpkts == 11) ? rxpkts_per_second : (axes_count > 5) ? axes_to_ch(axes[5].x) : buttons[btnidx++], //ch11
+                    (chan_rxpkts == 12) ? rxpkts_per_second : (axes_count > 5) ? axes_to_ch(axes[5].y) : buttons[btnidx++], //ch12
+                    (chan_rxpkts == 13) ? rxpkts_per_second : (axes_count > 6) ? axes_to_ch(axes[6].x) : buttons[btnidx++], //ch13
+                    (chan_rxpkts == 14) ? rxpkts_per_second : (axes_count > 6) ? axes_to_ch(axes[6].y) : buttons[btnidx++], //ch14
+                    (chan_rxpkts == 15) ? rxpkts_per_second : (axes_count > 7) ? axes_to_ch(axes[7].x) : buttons[btnidx++], //ch15
+                    (chan_rxpkts == 16) ? rxpkts_per_second : (axes_count > 7) ? axes_to_ch(axes[7].y) : buttons[btnidx++], //ch16
+                    (chan_rxpkts == 17) ? rxpkts_per_second : (axes_count > 8) ? axes_to_ch(axes[8].x) : buttons[btnidx++], //ch17
+                    (chan_rxpkts == 18) ? rxpkts_per_second : (axes_count > 8) ? axes_to_ch(axes[8].y) : buttons[btnidx++]  //ch18
+                    
              );
             len = mavlink_msg_to_send_buffer(buf, &msg);
             bytes_sent = sendto(out_sock, buf, len, 0, (struct sockaddr *)&sin_out, sizeof(sin_out));
