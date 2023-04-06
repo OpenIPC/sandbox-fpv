@@ -1,7 +1,7 @@
 #!/bin/sh
 
 start() {
-  /usr/bin/rcjoystick -t 25 >/dev/null &
+  /usr/bin/rcjoystick -t 25 -c 16 -i wlan0 &
 }
 
 stop() {
