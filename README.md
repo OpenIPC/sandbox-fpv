@@ -1,6 +1,8 @@
 # sandbox-fpv
 Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | [link](https://t.me/+BMyMoolVOpkzNWUy)
 
+## Новое
+
 * `06.04.2023` - Добавлена [прошивка coupler](notes_start_ivg-g2s.md#L33) для ivg-g2s с u-boot на борту.
 
 * `04.04.2023` - В OpenIPC "допилили" стример majestic, теперь на камере ivg-g2s работает h265 cbr (постоянный битрейт). Это дало более чистую картинку и значительное уменьшение шума. Вместе с этим были внесены изменения в процесс запуска линка. Основным сервисом теперь является `S98datalink` с конфигом `/etc/datalink.conf`, а запуск wfb теперь производится через `/usr/bin/wifibroadcast`. Статьи были исправлены под это нововведение.
