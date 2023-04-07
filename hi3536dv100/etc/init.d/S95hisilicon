@@ -6,8 +6,6 @@ start() {
   echo "disabling wdt"
   insmod /lib/wdt.ko
   rmmod /lib/wdt.ko
-  modprobe hid-generic.ko
-  /usr/bin/rcjoystick -t 25 >/dev/null &
 }
 
 stop() {
