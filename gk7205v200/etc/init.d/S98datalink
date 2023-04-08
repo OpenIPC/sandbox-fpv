@@ -21,7 +21,7 @@ start() {
     wpa_passphrase "ssid" "password" >/tmp/wpa_supplicant.conf
     sed -i '2i \\tscan_ssid=1' /tmp/wpa_supplicant.conf
     sleep 3
-    wpa_supplicant -B -D nl80211 -i wlan1 -c /tmp/wpa_supplicant.conf
+    wpa_supplicant -B -D nl80211 -i wlan0 -c /tmp/wpa_supplicant.conf
     ifconfig wlan0 up
     udhcpc -x hostname:openipc-servicemode -T 1 -t 5 -R -b -O search -i wlan0
   else
