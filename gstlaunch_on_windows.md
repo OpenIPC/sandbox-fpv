@@ -11,4 +11,4 @@ C:\gstreamer\1.0\msvc_x86_64\bin\gst-launch-1.0.exe -v udpsrc port=5600 buffer-s
 
 ![preview](https://github.com/OpenIPC/sandbox-fpv/raw/master/notes_files/Screenshot_2.png)
 
-Для воспроизведения видео в окне Mission Planner нужно кликнуть правой кнопкой мыши  по его окну с горизонтом и выбрать `Video > Set GStreamer source`, внести строку параметров: `udpsrc port=5600 buffer-size=32768 ! application/x-rtp ! rtph265depay ! queue max-size-buffers=5 ! avdec_h265 ! videoconvert! videoscale ! video/x-raw,width=1280,height=720,format=BGRA ! appsink name=outsink`, нажать Ok. Строка сохранится для будущий применений.
+Для воспроизведения видео в окне Mission Planner нужно кликнуть правой кнопкой мыши  по его окну с горизонтом и выбрать `Video > Set GStreamer source`, внести строку параметров: `udpsrc port=5600 buffer-size=32768 ! application/x-rtp ! rtph265depay ! queue max-size-buffers=5 ! avdec_h265 ! videoconvert ! appsink name=outsink`, нажать Ok. Строка сохранится для будущий применений.
