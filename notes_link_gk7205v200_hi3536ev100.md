@@ -91,7 +91,6 @@ Port = 14551
 yaml-cli -s .isp.sensorConfig /etc/sensors/imx307_i2c_2l_1080p.ini
 yaml-cli -s .video0.size 1920x1080
 yaml-cli -s .video0.fps 30
-killall -1 majestic
 
 start-stop-daemon -b -m -S -q -p "$PIDFILE" -x "/usr/bin/$DAEMON" \
 	-- $DAEMON_ARGS
@@ -101,10 +100,10 @@ if [ "$status" -eq 0 ]; then
 else
 	echo "FAIL"
 fi
-#ВСТАВИТЬ ЭТО	
+
 sleep .5
 /root/720.sh
-#/ВСТАВИТЬ ЭТО	
+
 return "$status"
 ```
 
