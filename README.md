@@ -11,7 +11,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 
 * `01.04.2023` - В связи с некоторыми обстоятельствами, wfb-ng был заменен в моих камере и регистраторе на альтернативу от [OpenHD](https://github.com/OpenHD/wifibroadcast/). [Тут](wfbopenhd.zip) пакет для сборки в buildroot OpenIPC. В шелл-обертках учтены оба варианта, по наличию параметра `link_id` который не требуется в реализации от OpenHD. [Архив](https://github.com/OpenIPC/sandbox-fpv/blob/master/wfb.zip) с бинарниками обоих вариантов.
 
-## Статьи
+## Заметки
 
 * [Заметки о настройке линка на камере gk7205v200 и регистраторе hi3536ev100 (dv100)](notes_link_gk7205v200_hi3536ev100.md)
 * [Заметки о прошивке камеры gk7205v200 на OpenIPC](notes_start_ivg-g2s.md)
