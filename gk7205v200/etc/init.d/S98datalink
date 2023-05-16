@@ -16,7 +16,7 @@ start() {
 
 	echo "Starting FPV datalink..."
   if ! [ -f /etc/servicemode ]; then
-    echo Start wlan0 in Service Mode (connect to your AP)
+    echo "Start wlan0 in Service Mode (connect to your AP)"
     rm -f /etc/servicemode
     wpa_passphrase "ssid" "password" >/tmp/wpa_supplicant.conf
     sed -i '2i \\tscan_ssid=1' /tmp/wpa_supplicant.conf
