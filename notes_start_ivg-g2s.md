@@ -13,7 +13,7 @@
 ### Термины
 
 * Flash - в данном контексте SPI-flash, микросхема памяти.
-* U-Boot - загрузчик. Есть "родной", есть от OpenIPC. Родной запаролен. Нам нужен [этот](https://github.com/OpenIPC/sandbox-fpv/blob/master/gk7205v200_u-boot-for-telemetry.md).
+* U-Boot - загрузчик. Есть "родной", есть от OpenIPC. Родной запаролен. Нам нужен скачанный из генератора инструкций.
 * uImage - ядро Embedded Linux, в виде bin файла.
 * Root-FS - файловая система выбранной версии (lite, ultimate, fpv), в виде squash-fs файла [https://ru.wikipedia.org/wiki/Squashfs]. uImage и rootfs нужно добывать через конструктор инструкций, раздельная прошивка u-boot и root-fs.
 * Shell - командная строка linux камеры, доступна через uart и ssh (программа putty). Также есть shell загрузчика, только uart. Логин root, пароля нет.
