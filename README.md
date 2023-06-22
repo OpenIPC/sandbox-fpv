@@ -2,6 +2,7 @@
 Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | [link](https://t.me/+BMyMoolVOpkzNWUy)
 
 ## Новое
+* `22.06.2023` - Наконец [решилась](gkrcparams.md) проблема с дерганностью картинки на 30fps.
 
 * `06.04.2023` - Добавлена [прошивка coupler](notes_start_ivg-g2s.md#L33) для ivg-g2s с u-boot на борту.
 
@@ -16,6 +17,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Заметки о настройке линка на камере gk7205v200 и регистраторе hi3536ev100 (dv100)](notes_link_gk7205v200_hi3536ev100.md)
 * [Заметки о прошивке камеры gk7205v200 на OpenIPC](notes_start_ivg-g2s.md)
 * [Заметки о прошивке регистратора hi3536ev100 на OpenIPC](notes_start_hi3536ev100.md)
+* [Добавляем плавности видео на goke/hisilicon камерах](gkrcparams.md)
 * [Заметка о управлении камерой через RC каналы с наземки](notes_cam_control.md)
 * [Переключение между двумя камерами в воздухе](note-two-cameras-switched.md)
 * [Загрузчик под телеметрию для gk7502v200, который не вешает камеру при ребуте](gk7205v200_u-boot-7502v200-for-telemetry.md)
