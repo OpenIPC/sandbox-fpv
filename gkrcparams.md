@@ -7,6 +7,7 @@
 
 ```
 	start-stop-daemon -b -m -S -q -p "$PIDFILE" -x "/usr/bin/$DAEMON" -- $DAEMON_ARGS
+	sleep 1                        <=== ЭТО ВСТАВИТЬ
 	gkrcparams --MaxQp 30 --MaxI 2 <=== ЭТО ВСТАВИТЬ
 	status=$?
 ```
