@@ -20,12 +20,12 @@ records:
   maxUsage: 95
 video0:
   enabled: true
-  bitrate: 4096
+  bitrate: 6144
   codec: h265
-  gopSize: 0.2
   rcMode: cbr
-  size: 1920x1080
-  fps: 30
+  gopSize: 1.0
+  size: 1280x720
+  fps: 50
 video1:
   enabled: false
 jpeg:
@@ -52,13 +52,13 @@ motionDetect:
 ipeye:
   enabled: false
 watchdog:
-  enabled: false
+  enabled: true
   timeout: 10
 isp:
   slowShutter: disabled
   drc: 350
   lowDelay: true
-  sensorConfig: /etc/sensors/imx307_i2c_2l_1080p.ini
+  sensorConfig: /etc/sensors/imx307_i2c_2l_720p_50fps.ini
 netip:
   enabled: false
 outgoing:

@@ -17,38 +17,36 @@ load_majestic() {
 		[ "$(cli -g .watchdog.timeout)" -lt "30" ] && cli -s .watchdog.timeout 30
 		ulimit -c unlimited && echo "|/usr/sbin/sendcoredump.sh" >/proc/sys/kernel/core_pattern
 	fi
-
-  cli -s .isp.sensorConfig /etc/sensors/imx307_i2c_2l_1080p.ini
+	
+	cli -s .isp.sensorConfig /etc/sensors/imx307_i2c_2l_1080p.ini
   cli -s .video0.size 1920x1080
   cli -s .video0.fps 30
-  cli -s .image.luminance 50
-
+  
 	start-stop-daemon -b -m -S -q -p "$PIDFILE" -x "/usr/bin/$DAEMON" -- $DAEMON_ARGS
+	
+	sleep .5
+
+	cli -s .isp.sensorConfig /etc/sensors/imx307_i2c_2l_720p_50fps.ini
+  cli -s .video0.size 1280x720
+  cli -s .video0.fps 50
+  
+  killall -1 majestic	
+	
+	sleep 1
+	gkrcparams --MaxQp 30 --MaxI 2
+	
 	status=$?
 	if [ "$status" -eq 0 ]; then
 		echo "OK"
 	else
 		echo "FAIL"
 	fi
-
-  #sleep .5
-	#/root/720.sh	
-	
 	return "$status"
 }
 
 # The daemon does not create a pidfile, and use "-m" to instruct start-stop-daemon to create one.
 start() {
-	logger -s -p daemon.info -t goke "Check MAC for Xiongmai devices"
-	if [ "$(fw_printenv -n ethaddr)" = "00:00:23:34:45:66" ]; then
-		logger -s -p daemon.info -t goke "The eth0 interface has a lousy MAC, let's try to change it.."
-		XMMAC="$(ipcinfo --xm-mac)" && [ -n "${XMMAC}" ] && fw_setenv ethaddr ${XMMAC} && reboot -f || logger -s -p daemon.info -t goke "It is not possible to install a new MAC on the eth0 interface.."
-	else
-		logger -s -p daemon.info -t goke "The eth0 interface has a correct MAC - $(fw_printenv -n ethaddr)"
-	fi
-	#
-	logger -s -p daemon.info -t goke "Loading of kernel modules and initialization of the video system has started"
-
+	logger -s -p daemon.info -t $(ipcinfo -v) "Loading video system has started..."
 	export SENSOR=$(fw_printenv -n sensor)
 	load_majestic
 }
