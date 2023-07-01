@@ -2,7 +2,7 @@
 Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | [link](https://t.me/+BMyMoolVOpkzNWUy)
 
 ## Новое
-* `01.07.2023` - Короткая заметка о камере [imx335 gk7205v300](notes_imx335_gk7205v300.md).
+* `01.07.2023` - Короткая заметка о камере [imx335 gk7205v300](notes_imx335_gk7205v300.md). О [baud для телеметрии](note_telemetry_baud.md).
 
 * `22.06.2023` - Наконец [решилась](gkrcparams.md) проблема с дерганностью картинки на 30fps.
 
@@ -37,6 +37,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [mavfwd для inav (односторонний msp) для камеры](user_TipoMan/mavfwd_mavlink2.tar?raw=true)
 * [Отображение видео на windows и в MP](gstlaunch_on_windows.md)
 * [Отключение watchdog на регистраторе hi3536dv100](note_nvr_wdt.md)
+* [Отличный от 115200 baud на uartе камеры для телеметрии](note_telemetry_baud.md)
 
 ## Дорожная карта
 * ~~Запуск видео с передачей с регистратора на пк.~~
