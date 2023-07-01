@@ -3,7 +3,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 
 ## Новое
 * `01.07.2023` - Короткая заметка о камере [imx335 gk7205v300](notes_imx335_gk7205v300.md).
-* 
+
 * `22.06.2023` - Наконец [решилась](gkrcparams.md) проблема с дерганностью картинки на 30fps.
 
 * `06.04.2023` - Добавлена [прошивка coupler](notes_start_ivg-g2s.md#L33) для ivg-g2s с u-boot на борту.
