@@ -3,7 +3,7 @@
 Исправить это можно, перенастроив на камере два параметра энкодера.
 Спасибо за проделанную работу TipoMan и widgetii!
 
-Нам нужно положить файл [gkrcparams](https://github.com/OpenIPC/sandbox-fpv/raw/master/user_TipoMan/gkrcparams) в /usr/bin, дать права на выполнение `chmod +x /usr/sbin/gkrcparams` и вставить запуск его после старта majestic в /etc/init.d/S95majestic:
+Нам нужно положить файл [gkrcparams](https://github.com/OpenIPC/sandbox-fpv/raw/master/user_TipoMan/gkrcparams) в /usr/sbin, дать права на выполнение `chmod +x /usr/sbin/gkrcparams` и вставить запуск его после старта majestic в /etc/init.d/S95majestic:
 
 ```
 	start-stop-daemon -b -m -S -q -p "$PIDFILE" -x "/usr/bin/$DAEMON" -- $DAEMON_ARGS
