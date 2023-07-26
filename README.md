@@ -2,6 +2,8 @@
 Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | [link](https://t.me/+BMyMoolVOpkzNWUy)
 
 ## Новое
+* `26.07.2023` - Настройка FPV-линка [через 4G модем](lte-fpv.md).
+
 * `01.07.2023` - Короткая заметка о камере [imx335 gk7205v300](notes_imx335_gk7205v300.md). О [baud для телеметрии](note_telemetry_baud.md).
 
 * `22.06.2023` - Наконец [решилась](gkrcparams.md) проблема с дерганностью картинки на 30fps.
@@ -31,6 +33,7 @@ Sandbox for FPV experiments. Telegram-group: `https://t.me/+BMyMoolVOpkzNWUy` | 
 * [Использование аппаратуры как джойстика для передачи каналов RC через mavlink](rcjoystick.md)
 * [Про аналог RSSI](rcjoystick.md#rssi)
 * [SBUS-to-USB joystick для использования любой аппаратуры с sbus приемником](sbus-to-usb-joystick)
+* [Настройка FPV-линка через 4G модем](lte-fpv.md)
 * [Установка usb_modeswitch на камеру с прошивкой fpv, lite](usb-modeswitch.md)
 
 #### Разное
