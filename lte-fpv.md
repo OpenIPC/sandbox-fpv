@@ -6,7 +6,7 @@
 * настроить свой сервер zerotier (можно воспользоваться публичным)
 * подключить камеру и ПК к одной сети zerotier и настроить стрим
 
-Следуя [этим инструкциям](usb_modeswitch.md), настроим usb_modeswitch и сетевой интерфейс eth1 на камере под прошивкой OpenIPC LTE. Если у вас FPV или LITE прошивка, нужно ее сменить онлайн:
+Следуя [этим инструкциям](usb-modeswitch.md), настроим usb_modeswitch и сетевой интерфейс eth1 на камере под прошивкой OpenIPC LTE. Если у вас FPV или LITE прошивка, нужно ее сменить онлайн:
 ```
 #тут меняем fpv на lte в файле /etc/os-release, можно это сделать вручную
 sed -i 's/BUILD_OPTION=fpv/BUILD_OPTION=lte/' /etc/os-release
