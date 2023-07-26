@@ -20,7 +20,7 @@ ln -s -f /lib/libc-2.32.so /lib/libc.so
 
 
 <details>
-  <summary>пока не работает</summary>
+  <summary>альтернативное хранилище: пока не работает - curl не желает скачивать по ссылке с гитхаба, можете вручную</summary>
   
 ```
 ntpd -Nnq
