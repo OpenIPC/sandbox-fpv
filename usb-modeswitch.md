@@ -33,15 +33,19 @@ ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
 
 
 
-Вносим этот блок для e3372h в /etc/network/interfaces:
+Вносим этот текст для e3372h в файл `/etc/network/interfaces.d/eth1` (создадим файл если отсутствует):
 ```
-manual eth1
+auto eth1
 iface eth1 inet dhcp
-    pre-up sleep 4
-    pre-up usb_modeswitch -v 0x12d1 -p 0x1f01 -J
-    pre-up modprobe usbserial vendor=0x12d1 product=0x14dc
-    pre-up modprobe rndis_host
-    pre-up sleep 4
+    pre-up sleep 2
+    pre-up if [ ! -z "`lsusb | grep 12d1:1f01`" ]; then usb_modeswitch -v 0x12d1 -p 0x1f01 -J; fi
+    pre-up if [ ! -z "`lsusb | grep 12d1:14dc`" ]; then modprobe usbserial vendor=0x12d1 product=0x14dc; modprobe rndis_host; fi
+    pre-up sleep 2
+    post-up rmmod rndis_host
+    post-up rmmod usbserial
 ```
 
-Передергиваем модем, пробуем `ifup eth1`. Если сетевая поднялась (есть eth1 в `ip a`), в interfaces можем manual заменить на auto. 
+Передергиваем модем, пробуем `ifup eth1` или перезагружаем. Если сетевая поднялась (есть eth1 в `ip a`), в interfaces можем manual заменить на auto. 
+
+#### Проблемы
+Если usb_modeswitch произвел переключение модема в cdc_ethernet, то при перезагрузке системы например через reboot интерфейс не поднимается - ошибка ip: SIOCGIFFLAGS: No such device. Поэтому если нужно полностью перегрузить систему чтобы модем заработал, нужно рвать питание.
