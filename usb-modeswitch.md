@@ -37,15 +37,49 @@ ln -s -f /usr/lib/libusb-1.0.so.0.3.0 /usr/lib/libusb-1.0.so.0
 ```
 auto eth1
 iface eth1 inet dhcp
-    pre-up sleep 2
+    pre-up sleep 4
     pre-up if [ ! -z "`lsusb | grep 12d1:1f01`" ]; then usb_modeswitch -v 0x12d1 -p 0x1f01 -J; fi
-    pre-up if [ ! -z "`lsusb | grep 12d1:14dc`" ]; then modprobe usbserial vendor=0x12d1 product=0x14dc; modprobe rndis_host; fi
+    pre-up if [ ! -z "`lsusb | grep 12d1:14dc`" ]; then modprobe usbserial vendor=0x12d1 product=0x14dc; fi
+    pre-up modprobe rndis_host
     pre-up sleep 2
-    post-up rmmod rndis_host
-    post-up rmmod usbserial
 ```
 
 Передергиваем модем, пробуем `ifup eth1` или перезагружаем. Если сетевая поднялась (есть eth1 в `ip a`), в interfaces можем manual заменить на auto. 
 
 #### Проблемы
-Если usb_modeswitch произвел переключение модема в cdc_ethernet, то при перезагрузке системы например через reboot интерфейс не поднимается - ошибка ip: SIOCGIFFLAGS: No such device. Поэтому если нужно полностью перегрузить систему чтобы модем заработал, нужно рвать питание.
+Если usb_modeswitch произвел переключение модема в cdc_ethernet, то при перезагрузке системы например через reboot интерфейс не поднимается - ошибка ip: SIOCGIFFLAGS: No such device. Поэтому если нужно полностью перегрузить систему чтобы модем заработал, нужно рвать питание модема перед перезагрузкой.
+
+### Результат
+Модем e3372h с прошивкой hilink должен отобразиться сетевым интерфейсом eth1 и при вставленной работоспособной sim-карте раздавать интернет на камеру:
+```
+Trying to send message 1 to endpoint 0x01 ...
+ OK, message successfully sent
+Read the response to message 1 (CSW) ...
+ Device seems to have vanished after reading. Good.
+ Device is gone, skip any further commands
+-> Run lsusb to note any changes. Bye!
+
+udhcpc: started, v1.36.0
+udhcpc: broadcasting discover
+udhcpc: broadcasting discover
+udhcpc: broadcasting discover
+udhcpc: broadcasting discover
+udhcpc: broadcasting select for 192.168.8.100, server 192.168.8.1
+udhcpc: lease of 192.168.8.100 obtained from 192.168.8.1, lease time 86400
+deleting routers
+adding dns 192.168.8.1
+adding dns 192.168.8.1
+OK
+```
+ifconfig:
+```
+eth1      Link encap:Ethernet  HWaddr 0C:5B:8F:27:9A:64
+          inet addr:192.168.8.100  Bcast:192.168.8.255  Mask:255.255.255.0
+          inet6 addr: fe80::e5b:8fff:fe27:9a64/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:34 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:806 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:4557 (4.4 KiB)  TX bytes:822513 (803.2 KiB)
+
+```
