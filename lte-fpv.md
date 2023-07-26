@@ -31,9 +31,11 @@ apt-get install ./ztncui_0.7.1_amd64.deb
 echo 'HTTPS_PORT=6443' > /opt/key-networks/ztncui/.env         #порт для вебморды управления
 echo 'NODE_ENV=production' >> /opt/key-networks/ztncui/.env    #режим работы
 echo 'HTTPS_HOST=nn.mm.ff.dd' >> /opt/key-networks/ztncui/.env #внешний ip-адрес нашего сервера
+
+systemctl restart ztncui
 ```
 
-systemctl restart ztncui и входим по ссылке https://ip_addr:6443, логин admin, пароль password.
+Входим по ссылке https://ip_addr:6443, логин admin, пароль password.
 Далее создаем сеть и настраиваем параметры выдачи адресов, какие вам больше нравятся, остальные настройки по умолчанию.
 В режиме private после подключения клиента требуется установить галочку Authorized чтобы разрешить ему подключение.
 
