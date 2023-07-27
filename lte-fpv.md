@@ -82,7 +82,7 @@ Baud = 115200
 
 [UdpEndpoint qgroundcontrol]
 Mode = Normal
-Address = qgroundcontrol
+Address = gs_ip_from_zerotier
 Port = 14550
 ```
 
