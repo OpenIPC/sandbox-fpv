@@ -37,12 +37,6 @@ Andrey Bezborodov из команды OpenIPC предоставил на тес
 ### Нюансы на регистраторе
 Так как регистратор относительно камеры имеет шикарные 16мб памяти spi flash, из которых мы можем использовать около 5мб, то нам доступен [драйвер адаптеров RTL](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100/88XXau-ko) который поддерживает rtl8814au в дополнение к популярному rtl8812au. Для этого нужно залить его поверх штатного в `lib/modules/4.9.37/extra`, не забыв переименовать. 
 
-### эти конфиги уже в штатной прошивке OpenIPC
-Также изменен его запуск, `insmod` взамен `modprobe` в `/usr/bin/wifibroadcast`. Там же изменен режим wfb с передачи на прием (`wfb_rx`), в `wfb.conf` появился новый параметр `udp_addr` - это адрес, куда отправлять видеопоток. Все файлы можно увидеть [тут](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100).
-Отключены сервисы `telnet`, `httpd`, `snmpd` как неиспользуемые через `exit 1` в [скриптах запуска](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100/etc/init.d).
-Изменен и [запуск телеметрии](hi3536dv100/usr/bin/telemetry), поскольку rx и tx части поменялись местами относительно "воздушной" части.
-### ---
-
 Перекомпилирован [`mavlink-router`](https://github.com/OpenIPC/sandbox-fpv/tree/master/hi3536dv100/usr/bin), так как комплектный из прошивки собран на musl для воздушной части (где он не используется), а прошивка регистратора на glibc.
 
 Также необходимо [отключить hisilicon watchdog](note_nvr_wdt.md).
