@@ -1,4 +1,5 @@
 ### Заметки о прошивке NVR hi3536ev100 на OpenIPC для целей FPV
+[EN](notes_start_hi3536ev100.md)
 
 <details>
   <summary>Как устроена память</summary>
